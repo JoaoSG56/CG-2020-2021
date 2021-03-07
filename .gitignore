@@ -2,3 +2,4 @@
 cmake-build-debug/
 teste*
 build
+*.3d
