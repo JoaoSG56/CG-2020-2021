@@ -27,10 +27,26 @@ string XMLPath = "../src/Engine/"; // for now
 string figures3dPath = "../src/Figures/"; // for now
 float ex = 5, ey = 5, ez = 5;
 float tx = 0, ty = 0, tz = 0;
-float xsize = 1, size = 1, zsize = 1;
+float xsize = 1, ysize = 1, zsize = 1;
 float angleX = 1, angleY = 1;
 
 vector<Ponto> vertices;
+
+void eixos() {
+    glBegin(GL_LINES);
+    // X axis in red
+    glColor3f(1.0f, 0.0f, 0.0f);
+    glVertex3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(100.0f, 0.0f, 0.0f);
+    // Y Axis in Green
+    glColor3f(0.0f, 1.0f, 0.0f);
+    glVertex3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(0.0f, 100.0f, 0.0f);
+    // Z Axis in Blue
+    glColor3f(0.0f, 0.0f, 1.0f);
+    glVertex3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(0.0f, 0.0f, 100.0f);
+}
 
 void changeSize(int w, int h) {
 
@@ -71,25 +87,13 @@ void renderScene(void) {
 
 // put the geometric transformations here
     glTranslatef(tx, ty, tz); // moves the object
-    glScalef(xsize, size, zsize); // scale factors for each axis
+    glScalef(xsize, ysize, zsize); // scale factors for each axis
     glRotatef(angleY, 0, 1, 0); // angle is in degrees
     glRotatef(angleX, 1, 0, 0);
 
 
 // put drawing instructions here
-    glBegin(GL_LINES);
-    // X axis in red
-    glColor3f(1.0f, 0.0f, 0.0f);
-    glVertex3f(0.0f, 0.0f, 0.0f);
-    glVertex3f(100.0f, 0.0f, 0.0f);
-    // Y Axis in Green
-    glColor3f(0.0f, 1.0f, 0.0f);
-    glVertex3f(0.0f, 0.0f, 0.0f);
-    glVertex3f(0.0f, 100.0f, 0.0f);
-    // Z Axis in Blue
-    glColor3f(0.0f, 0.0f, 1.0f);
-    glVertex3f(0.0f, 0.0f, 0.0f);
-    glVertex3f(0.0f, 0.0f, 100.0f);
+    eixos();
 
     // vector drawn
     glColor3f(1, 1, 1);
@@ -123,10 +127,10 @@ void keyboardspecial(int key_code, int x, int y){
 void keyboardfunc(unsigned char key, int x, int y) {
     switch (key) {
         case '+':
-            size += 0.1;
+            ysize += 0.1;
             break;
         case '-':
-            size -= 0.1;
+            ysize -= 0.1;
             break;
         case 'z':
             zsize += 0.1;
