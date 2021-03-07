@@ -9,7 +9,7 @@
 #endif
 
 #include <math.h>
-#include "headers/tinyxml2.h"
+#include "../headers/tinyxml2.h"
 #include <vector>
 #include <string>
 #include <iostream>
@@ -24,7 +24,7 @@ using namespace tinyxml2;
 using namespace std;
 
 string XMLPath = "../src/Engine/"; // for now
-string figures3dPath = "../src/Figures/"; // for now
+string figures3dPath = "../src/Files/"; // for now
 float ex = 5, ey = 5, ez = 5;
 float tx = 0, ty = 0, tz = 0;
 float xsize = 1, ysize = 1, zsize = 1;

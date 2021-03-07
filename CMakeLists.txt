@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.5)
 # Project Name
 PROJECT(engine)
 
-set(ENGINE_FILES src/Engine/engine.cpp src/Engine/headers/engine.h src/Engine/tinyxml2.cpp src/Engine/headers/tinyxml2.h)
+set(ENGINE_FILES src/Engine/engine.cpp src/headers/engine.h src/Engine/tinyxml2.cpp src/headers/tinyxml2.h src/Engine/Camera.cpp src/headers/Camera.h src/Engine/Point.cpp src/headers/Point.h)
 
 add_executable(engine ${ENGINE_FILES})
 
@@ -58,7 +58,7 @@ endif(WIN32)
 # Project Name
 PROJECT(generator)
 
-set(GENERATOR_FILES src/Generator/generator.cpp src/Generator/headers/generator.h)
+set(GENERATOR_FILES src/Generator/generator.cpp src/headers/generator.h src/Engine/tinyxml2.cpp src/headers/tinyxml2.h)
 
 add_executable(generator ${GENERATOR_FILES})
 

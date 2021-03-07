@@ -14,7 +14,10 @@
 #include <GL/glut.h>
 #endif
 #include <stdlib.h>
+#include "tinyxml2.h"
+
 
 using namespace std;
+using namespace tinyxml2;
 
 #endif
