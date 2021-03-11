@@ -8,29 +8,28 @@
 #include <GL/glut.h>
 #endif
 
-#include <math.h>
+#include <cmath>
 #include "../headers/tinyxml2.h"
 #include <vector>
 #include <string>
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include "../headers/Point.h"
 
-struct Ponto {
-    double x;
-    double y;
-    double z;
-};
 
 using namespace tinyxml2;
 using namespace std;
 
-string XMLPath = "../src/Engine/"; // for now
+string XMLPath = "../src/Files/"; // for now
 string figures3dPath = "../src/Files/"; // for now
-float ex = 5, ey = 5, ez = 5;
-float tx = 0, ty = 0, tz = 0;
-float xsize = 1, ysize = 1, zsize = 1;
-float angleX = 1, angleY = 1;
 
-vector<Ponto> vertices;
+
+float alpha = 0;
+float beta = 0;
+float raioCamera = 8;
+
+vector<Point> vertices;
 
 void eixos() {
     glBegin(GL_LINES);
@@ -46,6 +45,11 @@ void eixos() {
     glColor3f(0.0f, 0.0f, 1.0f);
     glVertex3f(0.0f, 0.0f, 0.0f);
     glVertex3f(0.0f, 0.0f, 100.0f);
+    glEnd();
+}
+
+void drawVertex(int x, int y, int z) {
+    glVertex3f(x, y, z);
 }
 
 void changeSize(int w, int h) {
@@ -81,25 +85,26 @@ void renderScene(void) {
 
     // set the camera
     glLoadIdentity();
-    gluLookAt(ex, ey, ez,
+    gluLookAt(raioCamera * cos(alpha) * sin(beta), raioCamera * sin(alpha), raioCamera * cos(alpha) * cos(beta),
               0.0, 0.0, 0.0,
               0.0f, 1.0f, 0.0f);
+    eixos();
 
 // put the geometric transformations here
-    glTranslatef(tx, ty, tz); // moves the object
-    glScalef(xsize, ysize, zsize); // scale factors for each axis
-    glRotatef(angleY, 0, 1, 0); // angle is in degrees
-    glRotatef(angleX, 1, 0, 0);
 
 
 // put drawing instructions here
-    eixos();
-
+    glBegin(GL_TRIANGLES);
     // vector drawn
-    glColor3f(1, 1, 1);
-
-    for (int i = 1; i < vertices.size(); i++)
-        glVertex3f(vertices[i].x, vertices[i].y, vertices[i].z);
+    int size = vertices.size();
+    for (int i = 0; i < size; i++) {
+        if (i % 3 == 0) {
+            glColor3f(((float) (rand() % 100) / 100.0), ((float) (rand() % 100) / 100.0),
+                      ((float) (rand() % 100) / 100.0));
+        }
+        glVertex3f(vertices[i].getX(), vertices[i].getY(), vertices[i].getZ());
+        //printf("%f %f %f\n",vertices[i].getX(), vertices[i].getY(), vertices[i].getZ());
+    }
 
     glEnd();
 
@@ -107,18 +112,22 @@ void renderScene(void) {
     glutSwapBuffers();
 }
 
-void keyboardspecial(int key_code, int x, int y){
+void keyboardspecial(int key_code, int x, int y) {
     switch (key_code) {
+
         case GLUT_KEY_UP:
-            angleY +=1;
+            raioCamera -= 1;
             break;
         case GLUT_KEY_DOWN:
-            angleY -=1;
+            raioCamera += 1;
             break;
+            /*
         case GLUT_KEY_RIGHT:
-            angleX+=1;
+            angleX += 1;
         case GLUT_KEY_LEFT:
-            angleX-=1;
+            angleX -= 1;
+             */
+
     }
     glutPostRedisplay();
 }
@@ -126,68 +135,71 @@ void keyboardspecial(int key_code, int x, int y){
 // write function to process keyboard events
 void keyboardfunc(unsigned char key, int x, int y) {
     switch (key) {
-        case '+':
-            ysize += 0.1;
-            break;
-        case '-':
-            ysize -= 0.1;
-            break;
-        case 'z':
-            zsize += 0.1;
-            break;
-        case 'x':
-            zsize -= 0.1;
-            break;
-        case 'c':
-            xsize += 0.1;
-            break;
-        case 'v':
-            xsize -= 0.1;
-            break;
         case 'w':
-            tz += 0.1;
+            if (alpha < (0.9 * M_PI_2)) {
+                alpha += M_PI / 32;
+            }
             break;
         case 's':
-            tz -= 0.1;
+            if (alpha > (-0.9 * M_PI_2)) {
+                alpha -= M_PI / 32;
+            }
             break;
         case 'a':
-            tx += 0.1;
+            beta -= M_PI / 32;
             break;
         case 'd':
-            tx -= 0.1;
+            beta += M_PI / 32;
             break;
-        case 'k':
-            ty += 0.1;
-            break;
-        case 'j':
-            ty -= 0.1;
+        default:
             break;
     }
     glutPostRedisplay();
 }
 
 
-void readfile(string ficheiro){
+void readfile(string ficheiro) {
     string delimiter = " ";
+    ifstream inputFileStream(ficheiro);
+    int count;
+    inputFileStream >> count;
+    inputFileStream.ignore(1, '\n');
 
+    for (int i = 0; i < count; i++) {
+        string line;
+        getline(inputFileStream, line);
+
+        istringstream lineStream(line);
+        string a, b, c;
+        getline(lineStream, a, ' ');
+        getline(lineStream, b, ' ');
+        getline(lineStream, c, ' ');
+
+
+        vertices.push_back(*new Point(atof(a.c_str()), atof(b.c_str()), atof(c.c_str())));
+
+    }
 }
 
-void readXML(string file){
+void readXML(string file) {
     XMLDocument xmldoc;
-    if(!(xmldoc.LoadFile(("../src/Engine/" + file).c_str()))){
-        XMLElement * pRootElement = xmldoc.FirstChildElement();
-        for(XMLElement *element = pRootElement->FirstChildElement(); element != NULL; element = element->NextSiblingElement()){
-            string ficheiro = element -> Attribute("file");
+    if (!(xmldoc.LoadFile((XMLPath + file).c_str()))) {
+        XMLElement *pRootElement = xmldoc.FirstChildElement();
+
+        for (XMLElement *element = pRootElement->FirstChildElement(); element; element = element->NextSiblingElement()) {
+            string ficheiro = element->Attribute("file");
             cout << "Ficheiro: " << ficheiro << " lido com sucesso " << endl;
             readfile(figures3dPath + ficheiro);
         }
+    } else {
+        printf("%s\n", file.c_str());
     }
 
 }
 
 int main(int argc, char **argv) {
     readXML("teste.xml");
-    /*
+
 // init GLUT and the window
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
@@ -211,7 +223,7 @@ int main(int argc, char **argv) {
 
 // enter GLUT's main cycle
     glutMainLoop();
-     */
 
-    return 1;
+
+    return 0;
 }

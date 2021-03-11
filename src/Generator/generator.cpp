@@ -14,19 +14,22 @@ void plane(int lado, string nome) {
     }
 
     //Vertices
-    printf("%d\n", 6);
-    file << "6" << endl;
-    printf("%f %f %f\n", -x, y, -z);
+    printf("%d\n", 12);
+    file << 12 << endl;
     file << -x << " " << y << " " << -z << endl;
-    printf("%f %f %f\n", -x, y, z);
     file << -x << " " << y << " " << z << endl;
-    printf("%f %f %f\n", x, y, z);
     file << x << " " << y << " " << z << endl;
-    printf("%f %f %f\n", x, y, z);
+
     file << x << " " << y << " " << z << endl;
-    printf("%f %f %f\n", x, y, -z);
     file << x << " " << y << " " << -z << endl;
-    printf("%f %f %f\n", -x, y, -z);
+    file << -x << " " << y << " " << -z << endl;
+
+    file << -x << " " << y << " " << z << endl;
+    file << -x << " " << y << " " << -z << endl;
+    file << x << " " << y << " " << z << endl;
+
+    file << x << " " << y << " " << -z << endl;
+    file << x << " " << y << " " << z << endl;
     file << -x << " " << y << " " << -z << endl;
 
 
@@ -43,130 +46,112 @@ void box(float a, float b, float c, int optional, string nome) {
     y = b / 2;
     z = c / 2;
 
+    int divisoes = (optional == -1) ? 1 : optional;
 
-    if (optional == -1) { // não foi dada
+    float moveX = a / divisoes;
+    float moveY = b / divisoes;
+    float moveZ = c / divisoes;
 
+
+    printf("%d\n", 36 * divisoes * divisoes);
+    file << 36 * divisoes * divisoes << endl;
+
+
+    for (int i = 0; i < divisoes; i++) {
+        for (int j = 0; j < divisoes; j++) {
+            // cima
+            file << -x + (j * moveX) << " " << y << " " << -z + (i * moveZ) << endl;
+            file << -x + moveX + (j * moveX) << " " << y << " " << -z + moveZ + i * moveZ << endl;
+            file << -x + moveX + (j * moveX) << " " << y << " " << -z + i * moveZ << endl;
+
+            file << -x + (j * moveX) << " " << y << " " << -z + moveZ + i * moveZ << endl;
+            file << -x + moveX + (j * moveX) << " " << y << " " << -z + moveZ + i * moveZ << endl;
+            file << -x + (j * moveX) << " " << y << " " << -z + (i * moveZ) << endl;
+
+            // baixo
+            file << -x + moveX + (j * moveX) << " " << -y << " " << -z + moveZ + i * moveZ << endl;
+            file << -x + (j * moveX) << " " << -y << " " << -z + (i * moveZ) << endl;
+            file << -x + moveX + (j * moveX) << " " << -y << " " << -z + i * moveZ << endl;
+
+            file << -x + moveX + (j * moveX) << " " << -y << " " << -z + moveZ + i * moveZ << endl;
+            file << -x + (j * moveX) << " " << -y << " " << -z + moveZ + i * moveZ << endl;
+            file << -x + (j * moveX) << " " << -y << " " << -z + (i * moveZ) << endl;
+
+
+
+            // frente
+            file << -x + moveX + (j * moveX) << " " << -y + moveY + i * moveY << " " << z << endl;
+            file << -x + (j * moveX) << " " << -y + (i * moveY) << " " << z << endl;
+            file << -x + moveX + (j * moveX) << " " << -y + i * moveY << " " << z << endl;
+
+            file << -x + moveX + (j * moveX) << " " << -y + moveY + i * moveY << " " << z << endl;
+            file << -x + (j * moveX) << " " << -y + moveY + (i * moveY) << " " << z << endl;
+            file << -x + (j * moveX) << " " << -y + (i * moveY) << " " << z << endl;
+
+
+            // trás
+            file << -x + (j * moveX) << " " << -y + (i * moveY) << " " << -z << endl;
+            file << -x + moveX + (j * moveX) << " " << -y + moveY + i * moveY << " " << -z << endl;
+            file << -x + moveX + (j * moveX) << " " << -y + i * moveY << " " << -z << endl;
+
+            file << -x + (j * moveX) << " " << -y + moveY + (i * moveY) << " " << -z << endl;
+            file << -x + moveX + (j * moveX) << " " << -y + moveY + i * moveY << " " << -z << endl;
+            file << -x + (j * moveX) << " " << -y + (i * moveY) << " " << -z << endl;
+
+            // lado direito
+            file << x << " " << -y + (i * moveY) << " " << -z + (j * moveZ) << endl;
+            file << x << " " << -y + moveY + i * moveY << " " << -z + moveZ + (j * moveZ) << endl;
+            file << x << " " << -y + i * moveY << " " << -z + moveZ + (j * moveZ) << endl;
+
+            file << x << " " << -y + moveY + (i * moveY) << " " << -z + (j * moveZ) << endl;
+            file << x << " " << -y + moveY + i * moveY << " " << -z + moveZ + (j * moveZ) << endl;
+            file << x << " " << -y + (i * moveY) << " " << -z + (j * moveZ) << endl;
+
+            // lado esquerdo
+            file << -x << " " << -y + moveY + i * moveY << " " << -z + moveZ + (j * moveZ) << endl;
+            file << -x << " " << -y + (i * moveY) << " " << -z + (j * moveZ) << endl;
+            file << -x << " " << -y + i * moveY << " " << -z + moveZ + (j * moveZ) << endl;
+
+            file << -x << " " << -y + moveY + i * moveY << " " << -z + moveZ + (j * moveZ) << endl;
+            file << -x << " " << -y + moveY + (i * moveY) << " " << -z + (j * moveZ) << endl;
+            file << -x << " " << -y + (i * moveY) << " " << -z + (j * moveZ) << endl;
+        }
     }
-    printf("%d\n", 36);
-        file << "36" << endl;
-    printf("%d\n", optional);
-        file << optional << endl;
 
-    // face XOZ-1
-    printf("%f %f %f\n", x, -y, z);
-        file << x << " " << -y << " " << z << endl;
-    printf("%f %f %f\n", -x, -y, -z);
-        file << -x << " " << -y << " " << -z << endl;
-    printf("%f %f %f\n", x, -y, -z);
-        file << x << " " << -y << " " << -z << endl;
-    printf("%f %f %f\n", x, -y, z);
-        file << x << " " << -y << " " << z << endl;
-    printf("%f %f %f\n", -x, -y, z);
-        file << -x << " " << -y << " " << z << endl;
-    printf("%f %f %f\n", -x, -y, -z);
-        file << -x << " " << -y << " " << -z << endl;
-
-    // face XOZ-2
-    printf("%f %f %f\n", -x, y, -z);
-        file << -x << " " << y << " " << -z << endl;
-    printf("%f %f %f\n", x, y, z);
-        file << x << " " << y << " " << z << endl;
-    printf("%f %f %f\n", x, y, -z);
-        file << x << " " << y << " " << -z << endl;
-    printf("%f %f %f\n", -x, y, z);
-        file << -x << " " << y << " " << z << endl;
-    printf("%f %f %f\n", x, y, z);
-        file << x << " " << y << " " << z << endl;
-    printf("%f %f %f\n", -x, y, -z);
-        file << -x << " " << y << " " << -z << endl;
-
-    // face XOY-1
-    printf("%f %f %f\n", -x, y, z);
-        file << -x << " " << y << " " << z << endl;
-    printf("%f %f %f\n", -x, -y, z);
-        file << -x << " " << -y << " " << z << endl;
-    printf("%f %f %f\n", x, -y, z);
-        file << x << " " << -y << " " << z << endl;
-
-    printf("%f %f %f\n", x, -y, z);
-        file << x << " " << -y << " " << z << endl;
-    printf("%f %f %f\n", x, y, z);
-        file << x << " " << y << " " << z << endl;
-    printf("%f %f %f\n", -x, y, z);
-        file << -x << " " << y << " " << z << endl;
-
-    // face XOY-2
-    printf("%f %f %f\n", -x, -y, -z);
-        file << -x << " " << -y << " " << -z << endl;
-    printf("%f %f %f\n", -x, y, -z);
-        file << -x << " " << y << " " << -z << endl;
-    printf("%f %f %f\n", x, -y, -z);
-        file << x << " " << -y << " " << -z << endl;
-
-    printf("%f %f %f\n", x, y, -z);
-        file << x << " " << y << " " << -z << endl;
-    printf("%f %f %f\n", x, -y, -z);
-        file << x << " " << -y << " " << -z << endl;
-    printf("%f %f %f\n", -x, y, -z);
-        file << -x << " " << y << " " << -z << endl;
-
-
-    // face YOZ-1
-    printf("%f %f %f\n", x, y, z);
-        file << x << " " << y << " " << z << endl;
-    printf("%f %f %f\n", x, -y, z);
-        file << x << " " << -y << " " << z << endl;
-    printf("%f %f %f\n", x, -y, -z);
-        file << x << " " << -y << " " << -z << endl;
-
-    printf("%f %f %f\n", x, -y, -z);
-        file << x << " " << -y << " " << -z << endl;
-    printf("%f %f %f\n", x, y, -z);
-        file << x << " " << y << " " << -z << endl;
-    printf("%f %f %f\n", x, y, z);
-        file << x << " " << y << " " << z << endl;
-
-
-    // face YOZ-2
-    printf("%f %f %f\n", -x, -y, z);
-        file << x << " " << -y << " " << z << endl;
-    printf("%f %f %f\n", -x, y, z);
-        file << x << " " << y << " " << z << endl;
-    printf("%f %f %f\n", -x, -y, -z);
-        file << x << " " << -y << " " << -z << endl;
-
-    printf("%f %f %f\n", -x, y, -z);
-        file << x << " " << y << " " << -z << endl;
-    printf("%f %f %f\n", -x, -y, -z);
-        file << x << " " << -y << " " << -z << endl;
-    printf("%f %f %f\n", -x, y, z);
-        file << x << " " << y << " " << z << endl;
 
 }
 
-void insertXML(string file,string name){
+void insertXML(string file, string name) {
     XMLDocument xmldoc;
-    if(xmldoc.LoadFile(("../src/Files/"+file).c_str())){
+    if (xmldoc.LoadFile(("../src/Files/" + file).c_str())) {
         // criar
-        XMLElement* psceneElement = xmldoc.NewElement("scene");
-            XMLElement* pmodelElement = xmldoc.NewElement("model");
-            pmodelElement->SetAttribute("file",name.c_str());
+        XMLElement *psceneElement = xmldoc.NewElement("scene");
+        XMLElement *pmodelElement = xmldoc.NewElement("model");
+        pmodelElement->SetAttribute("file", name.c_str());
         psceneElement->LinkEndChild(pmodelElement);
         xmldoc.LinkEndChild(psceneElement);
 
-        xmldoc.SaveFile(("../src/Files/"+file).c_str());
-    }
-    else {
-        XMLElement* psceneElement = xmldoc.FirstChildElement();
+        xmldoc.SaveFile(("../src/Files/" + file).c_str());
+    } else {
+        XMLElement *psceneElement = xmldoc.FirstChildElement();
 
-        XMLElement* pmodelElement2 = xmldoc.NewElement("model");
-        pmodelElement2->SetAttribute("file",name.c_str());
+        // verificar se já existe ficheiro
+
+        for (XMLElement *paux = psceneElement->FirstChildElement(); paux; paux = paux->NextSiblingElement()) {
+            printf("%s\n", paux->Attribute("file"));
+            if (paux->Attribute("file") == name)
+                printf("já existe\n");
+            return;
+        }
+
+        XMLElement *pmodelElement2 = xmldoc.NewElement("model");
+        pmodelElement2->SetAttribute("file", name.c_str());
 
         psceneElement->LinkEndChild(pmodelElement2);
 
         xmldoc.LinkEndChild(psceneElement);
 
-        xmldoc.SaveFile(("../src/Files/"+file).c_str());
+        xmldoc.SaveFile(("../src/Files/" + file).c_str());
     }
 
 
@@ -210,23 +195,23 @@ int main(int argc, char *argv[]) {
         menu();
     } else if (argc == 4 && strcmp(argv[1], "plane") == 0) { // plano
         plane(atoi(argv[2]), argv[3]);
-        insertXML(file,argv[3]);
+        insertXML(file, argv[3]);
     } else if (argc == 6 && strcmp(argv[1], "sphere") == 0) { // esfera
         radius = atof(argv[2]);
         slices = atoi(argv[3]);
         stacks = atoi(argv[4]);
-        insertXML(file,argv[5]);
+        insertXML(file, argv[5]);
 
 
     } else if ((argc == 6 || argc == 7) && strcmp(argv[1], "box") == 0) { // box
 
         if (argc == 6) {
             box(atof(argv[2]), atof(argv[3]), atof(argv[4]), -1, argv[5]);
-            insertXML(file,argv[5]);
+            insertXML(file, argv[5]);
         } else {
             optional = atoi(argv[5]);
             box(atof(argv[2]), atof(argv[3]), atof(argv[4]), optional, argv[6]);
-            insertXML(file,argv[6]);
+            insertXML(file, argv[6]);
         }
 
     } else if (argc == 7 && strcmp(argv[1], "cone") == 0) { // cone
@@ -234,7 +219,7 @@ int main(int argc, char *argv[]) {
         height = atof(argv[3]);
         slices = atoi(argv[4]);
         stacks = atoi(argv[5]);
-        insertXML(file,argv[6]);
+        insertXML(file, argv[6]);
     } else {
         printf("Argumentos insuficientes");
         return 1;
