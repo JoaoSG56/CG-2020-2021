@@ -121,6 +121,45 @@ void box(float a, float b, float c, int optional, string nome) {
 
 }
 
+void sphere(float radius, int slices, int stacks, string nome) {
+    ofstream file("../src/Files/" + nome);
+    float shiftL = (2 * M_PI) / slices;
+    float shiftH = (2 * M_PI) / (stacks * 2);
+    float x1, x2, x3;
+    float y1, y2, y3;
+    float z1, z2, z3;
+
+    printf("%d\n", 6 * slices * stacks * 2);
+    file << 6 * slices * stacks * 2 << endl;
+
+    for (int i = 0; i < stacks * 2; i++) {
+        for (int j = 0; j < slices; j++) {
+            x1 = radius * cos(shiftH * i) * sin(shiftL * j);
+            y1 = radius * sin(shiftH * i);
+            z1 = radius * cos(shiftH * i) * cos(shiftL * j);
+
+            x2 = radius * cos(shiftH * i) * sin(shiftL + shiftL * j);
+            y2 = radius * sin(shiftH * i);
+            z2 = radius * cos(shiftH * i) * cos(shiftL + shiftL * j);
+
+            x3 = radius * cos(shiftH + shiftH * i) * sin(shiftL * j);
+            y3 = radius * sin(shiftH + shiftH * i);
+            z3 = radius * cos(shiftH + shiftH * i) * cos(shiftL * j);
+
+            file << x1 << " " << y1 << " " << z1 << endl;
+            file << x2 << " " << y2 << " " << z2 << endl;
+            file << x3 << " " << y3 << " " << z3 << endl;
+
+            file << x3 << " " << y3 << " " << z3 << endl;
+            file << x2 << " " << y2 << " " << z2 << endl;
+
+            file << radius * cos(shiftH + shiftH * i) * sin(shiftL + shiftL * j) << " "
+                 << radius * sin(shiftH + shiftH * i) << " "
+                 << radius * cos(shiftH + shiftH * i) * cos(shiftL + shiftL * j) << endl;
+        }
+    }
+}
+
 void insertXML(string file, string name) {
     XMLDocument xmldoc;
     if (xmldoc.LoadFile(("../src/Files/" + file).c_str())) {
@@ -200,6 +239,7 @@ int main(int argc, char *argv[]) {
         radius = atof(argv[2]);
         slices = atoi(argv[3]);
         stacks = atoi(argv[4]);
+        sphere(radius,slices,stacks,argv[5]);
         insertXML(file, argv[5]);
 
 
