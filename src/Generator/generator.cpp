@@ -124,16 +124,16 @@ void box(float a, float b, float c, int optional, string nome) {
 void sphere(float radius, int slices, int stacks, string nome) {
     ofstream file("../src/Files/" + nome);
     float shiftL = (2 * M_PI) / slices;
-    float shiftH = (2 * M_PI) / (stacks * 2);
+    float shiftH = M_PI / stacks;
     float x1, x2, x3;
     float y1, y2, y3;
     float z1, z2, z3;
 
-    printf("%d\n", 6 * slices * stacks * 2);
-    file << 6 * slices * stacks * 2 << endl;
+    printf("%d\n", 6 * slices * stacks);
+    file << 6 * slices * stacks << endl;
 
-    for (int i = 0; i < stacks * 2; i++) {
-        for (int j = 0; j < slices; j++) {
+    for (int j = 0; j < slices; j++) {
+        for (int i = 0; i < stacks / 2; i++) {
             x1 = radius * cos(shiftH * i) * sin(shiftL * j);
             y1 = radius * sin(shiftH * i);
             z1 = radius * cos(shiftH * i) * cos(shiftL * j);
@@ -156,6 +156,85 @@ void sphere(float radius, int slices, int stacks, string nome) {
             file << radius * cos(shiftH + shiftH * i) * sin(shiftL + shiftL * j) << " "
                  << radius * sin(shiftH + shiftH * i) << " "
                  << radius * cos(shiftH + shiftH * i) * cos(shiftL + shiftL * j) << endl;
+
+            x1 = radius * cos(shiftH * i) * sin(shiftL * j);
+            y1 = radius * sin(shiftH * i);
+            z1 = radius * cos(shiftH * i) * cos(shiftL * j);
+
+            x2 = radius * cos(shiftH * i) * sin(shiftL + shiftL * j);
+            y2 = radius * sin(shiftH * i);
+            z2 = radius * cos(shiftH * i) * cos(shiftL + shiftL * j);
+
+            x3 = radius * cos(shiftH + shiftH * i) * sin(shiftL * j);
+            y3 = radius * sin(shiftH + shiftH * i);
+            z3 = radius * cos(shiftH + shiftH * i) * cos(shiftL * j);
+
+            file << x2 << " " << -y2 << " " << z2 << endl;
+            file << x1 << " " << -y1 << " " << z1 << endl;
+            file << x3 << " " << -y3 << " " << z3 << endl;
+
+            file << x2 << " " << -y2 << " " << z2 << endl;
+            file << x3 << " " << -y3 << " " << z3 << endl;
+
+            file << radius * cos(shiftH + shiftH * i) * sin(shiftL + shiftL * j) << " "
+                 << -(radius * sin(shiftH + shiftH * i)) << " "
+                 << radius * cos(shiftH + shiftH * i) * cos(shiftL + shiftL * j) << endl;
+        }
+
+
+    }
+}
+
+void cone(float radius, float height, int slices, int stacks, string nome) {
+    ofstream file("../src/Files/" + nome);
+    float alfa, x, z;
+    float h = height;
+    float l = sqrt(pow(h, 2) + pow(radius, 2)) / stacks;
+    float t = radius / stacks;
+    float dimSide = (2 * M_PI) / slices;
+    file << 2*slices*3+slices*6*(stacks-1) << endl;
+    for (int i = 0; i < stacks; i++) {
+        for (int j = 0; j < slices; j++) {
+            alfa = j * dimSide;
+            if (i == 0) {
+                file << 0 << " " << 0 << " " << 0 << endl;
+                x = radius * sin(alfa + dimSide);
+                z = radius * cos(alfa + dimSide);
+                file << x << " " << 0 << " " << z << endl;
+
+                x = radius * sin(alfa);
+                z = radius * cos(alfa);
+                file << x << " " << 0 << " " << z << endl;
+            }
+            if( i < stacks-1){
+                x = (radius - ((i+1)*t)) * sin(alfa + dimSide);
+                z = (radius - ((i+1)*t)) * cos(alfa + dimSide);
+                file << x << " " << (i+1)*l << " " << z << endl;
+
+                x = (radius - ((i+1)*t)) * sin(alfa);
+                z = (radius - ((i+1)*t)) * cos(alfa);
+                file << x << " " << (i+1)*l << " " << z << endl;
+                x = (radius - (i*t)) * sin(alfa);
+                z = (radius - (i*t)) * cos(alfa);
+                file << x << " " << i*l << " " << z << endl;
+
+                file << x << " " << i*l << " " << z << endl;
+                x = (radius - (i*t)) * sin(alfa + dimSide);
+                z = (radius - (i*t)) * cos(alfa + dimSide);
+                file << x << " " << i*l << " " << z << endl;
+                x = (radius - ((i+1)*t)) * sin(alfa + dimSide);
+                z = (radius - ((i+1)*t)) * cos(alfa + dimSide);
+                file << x << " " << (i+1)*l << " " << z << endl;
+            }
+            else{
+                x = (radius - (i*t)) * sin(alfa);
+                z = (radius - (i*t)) * cos(alfa);
+                file << x << " " << i*l << " " << z << endl;
+                x = (radius - (i*t)) * sin(alfa + dimSide);
+                z = (radius - (i*t)) * cos(alfa + dimSide);
+                file << x << " " << i*l << " " << z << endl;
+                file << 0 << " " << (i+1)*l << " " << 0 << endl;
+            }
         }
     }
 }
@@ -239,7 +318,7 @@ int main(int argc, char *argv[]) {
         radius = atof(argv[2]);
         slices = atoi(argv[3]);
         stacks = atoi(argv[4]);
-        sphere(radius,slices,stacks,argv[5]);
+        sphere(radius, slices, stacks, argv[5]);
         insertXML(file, argv[5]);
 
 
@@ -259,6 +338,7 @@ int main(int argc, char *argv[]) {
         height = atof(argv[3]);
         slices = atoi(argv[4]);
         stacks = atoi(argv[5]);
+        cone(radius,height,slices,stacks,argv[6]);
         insertXML(file, argv[6]);
     } else {
         printf("Argumentos insuficientes");

@@ -28,6 +28,7 @@ string figures3dPath = "../src/Files/"; // for now
 float alpha = 0;
 float beta = 0;
 float raioCamera = 8;
+GLenum mode = GL_FILL;
 
 vector<Point> vertices;
 
@@ -91,7 +92,7 @@ void renderScene(void) {
     eixos();
 
 // put the geometric transformations here
-
+    glPolygonMode(GL_FRONT,mode);
 
 // put drawing instructions here
     glBegin(GL_TRIANGLES);
@@ -150,6 +151,15 @@ void keyboardfunc(unsigned char key, int x, int y) {
             break;
         case 'd':
             beta += M_PI / 32;
+            break;
+        case 'p':
+            mode = GL_POINT;
+            break;
+        case 'l':
+            mode = GL_LINE;
+            break;
+        case 'f':
+            mode = GL_FILL;
             break;
         default:
             break;
