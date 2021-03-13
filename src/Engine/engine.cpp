@@ -8,6 +8,7 @@
 #include <GL/glut.h>
 #endif
 
+#define _USE_MATH_DEFINES
 #include <cmath>
 #include "../headers/tinyxml2.h"
 #include <vector>
@@ -17,7 +18,6 @@
 #include <sstream>
 #include "../headers/Point.h"
 #include <regex>
-
 
 using namespace tinyxml2;
 using namespace std;
