@@ -16,6 +16,7 @@
 #include <stdlib.h>
 #include "tinyxml2.h"
 
+#define PATH "../src/Files/"
 
 using namespace std;
 using namespace tinyxml2;

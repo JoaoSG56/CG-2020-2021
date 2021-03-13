@@ -16,6 +16,7 @@
 #include <fstream>
 #include <sstream>
 #include "../headers/Point.h"
+#include <regex>
 
 
 using namespace tinyxml2;
@@ -191,7 +192,7 @@ void readfile(string ficheiro) {
     }
 }
 
-void readXML(string file) {
+int readXML(string file) {
     XMLDocument xmldoc;
     if (!(xmldoc.LoadFile((XMLPath + file).c_str()))) {
         XMLElement *pRootElement = xmldoc.FirstChildElement();
@@ -201,21 +202,30 @@ void readXML(string file) {
             cout << "Ficheiro: " << ficheiro << " lido com sucesso " << endl;
             readfile(figures3dPath + ficheiro);
         }
+        return 1;
     } else {
-        printf("%s\n", file.c_str());
+        return 0;
     }
 
 }
 
 int main(int argc, char **argv) {
-    readXML("teste.xml");
+
+    if(argc != 2 || !regex_match(argv[1],regex("([a-zA-Z0-9\-_])+\.xml"))){
+        cout << "Argumentos inválidos\nComando:>> ./engine {file.xml}" << endl;
+        exit(0);
+    }
+    if(!readXML(argv[1])){
+        cout << "Ficheiro Inválido ou Mal escrito\nCertificar que o ficheiro se encontra em /src/Files/" << endl;
+        exit(0);
+    }
 
 // init GLUT and the window
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
     glutInitWindowPosition(100, 100);
     glutInitWindowSize(800, 800);
-    glutCreateWindow("CG@DI-UM");
+    glutCreateWindow("CG@2020-2021");
 
 // Required callback registry
     glutDisplayFunc(renderScene);
