@@ -304,7 +304,7 @@ int isFileValid(string fileName){
 
 int main(int argc, char *argv[]) {
     if(OS_Windows) {
-        system("mkdir -p ..\\src\\Files\\");
+        system("mkdir ..\\src\\Files\\");
     }
     else
         system("mkdir -p ../src/Files/");
