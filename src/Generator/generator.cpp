@@ -298,6 +298,10 @@ void returnError(string error){
     exit(0);
 }
 
+int isFileValid(string fileName){
+    return(regex_match(fileName,regex("([a-zA-Z0-9\-_])+\.3d")));
+}
+
 int main(int argc, char *argv[]) {
 
     float radius, height;
@@ -309,12 +313,12 @@ int main(int argc, char *argv[]) {
         exit(0);
     } else if (argc == 4 && strcmp(argv[1], "plane") == 0) { // plano
         name = argv[3];
-        if(!regex_match(name,regex("([a-zA-Z0-9\-_])+\.3d")))
+        if(!isFileValid(name))
             returnError("Nome de ficheiro inválido\nFicheiro tem de ser do formato: 'Nomedoficheiro.3d'");
         plane(atoi(argv[2]), name);
     } else if (argc == 6 && strcmp(argv[1], "sphere") == 0) { // esfera
         name = argv[5];
-        if(!regex_match(name,regex("([a-zA-Z0-9\-_])+\.3d")))
+        if(!isFileValid(name))
             returnError("Nome de ficheiro inválido\nFicheiro tem de ser do formato: 'Nomedoficheiro.3d'");
         radius = atof(argv[2]);
         slices = atoi(argv[3]);
@@ -326,12 +330,12 @@ int main(int argc, char *argv[]) {
 
         if (argc == 6) {
             name = argv[5];
-            if(!regex_match(name,regex("([a-zA-Z0-9\-_])+\.3d")))
+            if(!isFileValid(name))
                 returnError("Nome de ficheiro inválido\nFicheiro tem de ser do formato: 'Nomedoficheiro.3d'");
             box(atof(argv[2]), atof(argv[3]), atof(argv[4]), -1, name);
         } else {
             name = argv[6];
-            if(!regex_match(name,regex("([a-zA-Z0-9\-_])+\.3d")))
+            if(!isFileValid(name))
                 returnError("Nome de ficheiro inválido\nFicheiro tem de ser do formato: 'Nomedoficheiro.3d'");
             optional = atoi(argv[5]);
             box(atof(argv[2]), atof(argv[3]), atof(argv[4]), optional, name);
@@ -339,7 +343,7 @@ int main(int argc, char *argv[]) {
 
     } else if (argc == 7 && strcmp(argv[1], "cone") == 0) { // cone
         name = argv[6];
-        if(!regex_match(name,regex("([a-zA-Z0-9\-_])+\.3d")))
+        if(!isFileValid(name))
             returnError("Nome de ficheiro inválido\nFicheiro tem de ser do formato: 'Nomedoficheiro.3d'");
         radius = atof(argv[2]);
         height = atof(argv[3]);
