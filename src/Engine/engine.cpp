@@ -9,8 +9,8 @@
 #endif
 
 #define _USE_MATH_DEFINES
-#include <cmath>
 #include "../headers/tinyxml2.h"
+#include <cmath>
 #include <vector>
 #include <string>
 #include <iostream>
@@ -187,7 +187,8 @@ void readfile(string ficheiro) {
 
 void returnError(string error){
     cout << "Error:\n" << error << endl;
-    exit(0);
+    //exit(0);
+    return;
 }
 
 
@@ -234,12 +235,14 @@ int main(int argc, char **argv) {
     if(argc != 2 || !regex_match(argv[1],regex("([a-zA-Z0-9\-_])+\.xml"))){
         cout << "Argumentos inválidos" << endl;
         menu();
-        exit(0);
+        //exit(0);
+        return 0;
     }
     if(!readXML(argv[1])){
         cout << "Ficheiro Inválido ou Mal escrito\nCertificar que o ficheiro se encontra em /src/Files/" << endl;
         menu();
-        exit(0);
+        //exit(0);
+        return 0;
     }
 
 // init GLUT and the window

@@ -295,7 +295,8 @@ void menu() {
 
 void returnError(string error){
     cout << "Error:\n" << error << endl;
-    exit(0);
+    //exit(0);
+    return;
 }
 
 int isFileValid(string fileName){
@@ -310,7 +311,8 @@ int main(int argc, char *argv[]) {
 
     if (argc == 1 || strcmp(argv[1], "menu") == 0) {
         menu();
-        exit(0);
+        //exit(0);
+        return 0;
     } else if (argc == 4 && strcmp(argv[1], "plane") == 0) { // plano
         name = argv[3];
         if(!isFileValid(name))
@@ -353,7 +355,8 @@ int main(int argc, char *argv[]) {
     } else {
         cout << "Argumentos insuficientes/inválidos" << endl;
         cout << "Para ajuda corra './generator'" << endl;
-        exit(0);
+        //exit(0);
+        return 0;
     }
     cout << "Ficheiro guardado em " << PATH << name << endl;
 
