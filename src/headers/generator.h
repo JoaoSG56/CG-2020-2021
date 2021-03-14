@@ -9,8 +9,10 @@
 #include <iostream>
 #include <fstream>
 #ifdef __APPLE__
+#define OS_Windows 0
 #include <glut.h>
 #else
+#define OS_Windows 1
 #include <GL/glut.h>
 #endif
 #include <stdlib.h>

@@ -304,7 +304,11 @@ int isFileValid(string fileName){
 }
 
 int main(int argc, char *argv[]) {
-    system("mkdir -p ../src/Files/");
+    if(OS_Windows) {
+        system("mkdir -p ..\\src\\Files\\");
+    }
+    else
+        system("mkdir -p ../src/Files/");
     float radius, height;
     int slices, stacks, optional;
     string name;
