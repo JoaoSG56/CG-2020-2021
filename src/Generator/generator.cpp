@@ -296,7 +296,6 @@ void menu() {
 void returnError(string error){
     cout << "Error:\n" << error << endl;
     //exit(0);
-    return;
 }
 
 int isFileValid(string fileName){
@@ -318,13 +317,17 @@ int main(int argc, char *argv[]) {
         return 0;
     } else if (argc == 4 && strcmp(argv[1], "plane") == 0) { // plano
         name = argv[3];
-        if(!isFileValid(name))
+        if(!isFileValid(name)) {
             returnError("Nome de ficheiro inválido\nFicheiro tem de ser do formato: 'Nomedoficheiro.3d'");
+            return 0;
+        }
         plane(atoi(argv[2]), name);
     } else if (argc == 6 && strcmp(argv[1], "sphere") == 0) { // esfera
         name = argv[5];
-        if(!isFileValid(name))
+        if(!isFileValid(name)) {
             returnError("Nome de ficheiro inválido\nFicheiro tem de ser do formato: 'Nomedoficheiro.3d'");
+            return 0;
+        }
         radius = atof(argv[2]);
         slices = atoi(argv[3]);
         stacks = atoi(argv[4]);
@@ -335,21 +338,27 @@ int main(int argc, char *argv[]) {
 
         if (argc == 6) {
             name = argv[5];
-            if(!isFileValid(name))
+            if(!isFileValid(name)) {
                 returnError("Nome de ficheiro inválido\nFicheiro tem de ser do formato: 'Nomedoficheiro.3d'");
+                return 0;
+            }
             box(atof(argv[2]), atof(argv[3]), atof(argv[4]), -1, name);
         } else {
             name = argv[6];
-            if(!isFileValid(name))
+            if(!isFileValid(name)) {
                 returnError("Nome de ficheiro inválido\nFicheiro tem de ser do formato: 'Nomedoficheiro.3d'");
+                return 0;
+            }
             optional = atoi(argv[5]);
             box(atof(argv[2]), atof(argv[3]), atof(argv[4]), optional, name);
         }
 
     } else if (argc == 7 && strcmp(argv[1], "cone") == 0) { // cone
         name = argv[6];
-        if(!isFileValid(name))
+        if(!isFileValid(name)) {
             returnError("Nome de ficheiro inválido\nFicheiro tem de ser do formato: 'Nomedoficheiro.3d'");
+            return 0;
+        }
         radius = atof(argv[2]);
         height = atof(argv[3]);
         slices = atoi(argv[4]);

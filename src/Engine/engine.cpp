@@ -51,9 +51,6 @@ void eixos() {
     glEnd();
 }
 
-void drawVertex(int x, int y, int z) {
-    glVertex3f(x, y, z);
-}
 
 void changeSize(int w, int h) {
 
@@ -162,10 +159,18 @@ void keyboardfunc(unsigned char key, int x, int y) {
     glutPostRedisplay();
 }
 
+void returnError(string error){
+    cout << "Error:\n" << error << endl;
+    //exit(0);
+}
 
-void readfile(string ficheiro) {
+int readfile(string ficheiro) {
     string delimiter = " ";
     ifstream inputFileStream(ficheiro);
+    if(!inputFileStream.is_open()){
+        returnError("Ficheiro '" + ficheiro + "' não encontrado");
+        return 0;
+    }
     int count;
     inputFileStream >> count;
     inputFileStream.ignore(1, '\n');
@@ -184,12 +189,7 @@ void readfile(string ficheiro) {
         vertices.push_back(*new Point(atof(a.c_str()), atof(b.c_str()), atof(c.c_str())));
 
     }
-}
-
-void returnError(string error){
-    cout << "Error:\n" << error << endl;
-    //exit(0);
-    return;
+    return 1;
 }
 
 
@@ -200,9 +200,13 @@ int readXML(string file) {
 
         for (XMLElement *element = pRootElement->FirstChildElement(); element; element = element->NextSiblingElement()) {
             string ficheiro = element->Attribute("file");
-            if(!regex_match(ficheiro,regex("([a-zA-Z0-9\-_])+\.3d")))
-                returnError("XML inválido\nFicheiro tem de ser do formato: 'Nomedoficheiro.3d'\n"+file+" não carregado");
-            readfile(figures3dPath + ficheiro);
+            if(!regex_match(ficheiro,regex("([a-zA-Z0-9\-_])+\.3d"))) {
+                returnError("XML inválido\nFicheiro tem de ser do formato: 'Nomedoficheiro.3d'\n" + file +
+                            " não carregado");
+                return 0;
+            }
+
+            if(!readfile(figures3dPath + ficheiro)) return 0;
             cout << "Ficheiro: " << ficheiro << " lido com sucesso " << endl;
         }
         return 1;
