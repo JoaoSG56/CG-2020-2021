@@ -15,7 +15,6 @@
 #define OS_Windows 1
 #include <GL/glut.h>
 #endif
-#include <stdlib.h>
 #include "tinyxml2.h"
 
 #define PATH "../src/Files/"

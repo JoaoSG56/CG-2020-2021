@@ -312,7 +312,6 @@ int main(int argc, char *argv[]) {
     float radius, height;
     int slices, stacks, optional;
     string name;
-
     if (argc == 1 || strcmp(argv[1], "menu") == 0) {
         menu();
         //exit(0);
