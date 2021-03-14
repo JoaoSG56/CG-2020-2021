@@ -269,28 +269,28 @@ void insertXML(string file, string name) {
 }
 
 void menu() {
-    cout << "┌──────────────────────────** Menu **────────────────────────────┐ " << endl;
-    cout << "│                                                                │" << endl;
-    cout << "│      Usage: ./generator {COMANDO} {ARGUMENTS} {OUTPUT FILE}    │" << endl;
-    cout << "├────────────────────────────────────────────────────────────────┤" << endl;
-    cout << "│   COMANDO:                                                     │" << endl;
-    cout << "│ - plane [SIZE]                                                 │" << endl;
-    cout << "│    Cria um plano no plano XOZ, centrado na origem.             │" << endl;
-    cout << "│                                                                │" << endl;
-    cout << "│ - box [SIZE X] [SIZE Y] [SIZE Z] [DIVISIONS]                   │" << endl;
-    cout << "│    Cria uma box com as dimensões e divisões especificadas.     │" << endl;
-    cout << "│                                                                │" << endl;
-    cout << "│ - sphere [RADIUS] [SLICES] [STACKS]                            │" << endl;
-    cout << "│    Cria uma esfera com o raio, numero de slices e stacks dadas.│" << endl;
-    cout << "│                                                                │" << endl;
-    cout << "│ - cone [RADIUS] [HEIGHT] [SLICES] [STACKS]                     │" << endl;
-    cout << "│    Cria um cone com o raio, altura, slices e stacks dadas.     │" << endl;
-    cout << "├────────────────────────────────────────────────────────────────┤" << endl;
-    cout << "│   OUTPUT FILE:                                                 │" << endl;
-    cout << "│    Ouput File tem de ser do formato 'Nome.3d'                  │" << endl;
-    cout << "│  Corresponde ao ficheiro onde vão ser guardadas as coordenadas │" << endl;
-    cout << "│          necessárias para serem lidas pela engine.             │" << endl;
-    cout << "└────────────────────────────────────────────────────────────────┘" << endl;
+    cout << "#--------------------------** Menu **----------------------------# " << endl;
+    cout << "|                                                                |" << endl;
+    cout << "|      Usage: ./generator {COMANDO} {ARGUMENTS} {OUTPUT FILE}    |" << endl;
+    cout << "|----------------------------------------------------------------|" << endl;
+    cout << "|   COMANDO:                                                     |" << endl;
+    cout << "| - plane [SIZE]                                                 |" << endl;
+    cout << "|    Cria um plano no plano XOZ, centrado na origem.             |" << endl;
+    cout << "|                                                                |" << endl;
+    cout << "| - box [SIZE X] [SIZE Y] [SIZE Z] [DIVISIONS]                   |" << endl;
+    cout << "|    Cria uma box com as dimensões e divisões especificadas.     |" << endl;
+    cout << "|                                                                |" << endl;
+    cout << "| - sphere [RADIUS] [SLICES] [STACKS]                            |" << endl;
+    cout << "|    Cria uma esfera com o raio, numero de slices e stacks dadas.|" << endl;
+    cout << "|                                                                |" << endl;
+    cout << "| - cone [RADIUS] [HEIGHT] [SLICES] [STACKS]                     |" << endl;
+    cout << "|    Cria um cone com o raio, altura, slices e stacks dadas.     |" << endl;
+    cout << "|----------------------------------------------------------------|" << endl;
+    cout << "|   OUTPUT FILE:                                                 |" << endl;
+    cout << "|    Ouput File tem de ser do formato 'Nome.3d'                  |" << endl;
+    cout << "|  Corresponde ao ficheiro onde vão ser guardadas as coordenadas |" << endl;
+    cout << "|          necessárias para serem lidas pela engine.             |" << endl;
+    cout << "#----------------------------------------------------------------#" << endl;
 }
 
 void returnError(string error){

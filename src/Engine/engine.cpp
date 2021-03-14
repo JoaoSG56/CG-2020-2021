@@ -217,21 +217,21 @@ int readXML(string file) {
 }
 
 void menu(){
-    cout << "┌────────** MENU **─────────┐" << endl;
-    cout << "│    Modo de utilização:    │" << endl;
-    cout << "│    ./engine {file.xml}    │" << endl;
-    cout << "├───────────────────────────┤" << endl;
-    cout << "│          Teclas:          │" << endl;
-    cout << "│   Mover câmera: W A S D   │" << endl;
-    cout << "│  Zoom in : Up_arrow_key   │" << endl;
-    cout << "│ Zoom out : Down_arrow_key │" << endl;
-    cout << "│     ativar GL_Point : P   │" << endl;
-    cout << "│     ativar GL_Line : L    │" << endl;
-    cout << "│     ativar GL_Fill : F    │" << endl;
-    cout << "├───────────────────────────┤" << endl;
-    cout << "│  nota: .xml tem de estar  │" << endl;
-    cout << "│   na pasta \"/src/Files/\"  │" << endl;
-    cout << "└───────────────────────────┘" << endl;
+    cout << "#--------** MENU **---------#" << endl;
+    cout << "|    Modo de utilização:    |" << endl;
+    cout << "|    ./engine {file.xml}    |" << endl;
+    cout << "|---------------------------|" << endl;
+    cout << "|          Teclas:          |" << endl;
+    cout << "|   Mover câmera: W A S D   |" << endl;
+    cout << "|  Zoom in : Up_arrow_key   |" << endl;
+    cout << "| Zoom out : Down_arrow_key |" << endl;
+    cout << "|     ativar GL_Point : P   |" << endl;
+    cout << "|     ativar GL_Line : L    |" << endl;
+    cout << "|     ativar GL_Fill : F    |" << endl;
+    cout << "|---------------------------|" << endl;
+    cout << "|  nota: .xml tem de estar  |" << endl;
+    cout << "|   na pasta \"/src/Files/\"  |" << endl;
+    cout << "#---------------------------#" << endl;
 
 }
 
