@@ -1,3 +1,4 @@
+#include <regex>
 #include "../headers/generator.h"
 
 void plane(int lado, string nome) {
@@ -268,49 +269,56 @@ void insertXML(string file, string name) {
 }
 
 void menu() {
-    cout << "#_____________________________ HELP _____________________________# " << endl;
-    cout << "|                                                                |" << endl;
-    cout << "|   Usage: ./generator {COMMAND} ... {OUTPUT FILE}               |" << endl;
-    cout << "|                                                                |" << endl;
-    cout << "|   COMMANDS:                                                    |" << endl;
-    cout << "| - plane [SIZE]                                                 |" << endl;
-    cout << "|      Creates a square in the XZ plane, centred in the origin.  |" << endl;
-    cout << "|                                                                |" << endl;
-    cout << "| - box [SIZE X] [SIZE Y] [SIZE Z] [DIVISIONS]                   |" << endl;
-    cout << "|      Creates a box with the dimensions and divisions specified.|" << endl;
-    cout << "|                                                                |" << endl;
-    cout << "| - sphere [RADIUS] [SLICE] [STACK]                              |" << endl;
-    cout << "|      Creates a sphere with the radius, number of slices and    |" << endl;
-    cout << "|      stacks given.                                             |" << endl;
-    cout << "|                                                                |" << endl;
-    cout << "| - cone [RADIUS] [HEIGHT] [SLICE] [STACK]                       |" << endl;
-    cout << "|      Creates a cone with the radius, height, number of slices  |" << endl;
-    cout << "|      and stacks given.                                         |" << endl;
-    cout << "|                                                                |" << endl;
-    cout << "|   OUTPUT FILE:                                                 |" << endl;
-    cout << "| In the file section you can specify any file in which you wish |" << endl;
-    cout << "| to save the coordinates generated with the previous commands.  |" << endl;
-    cout << "|                                                                |" << endl;
-    cout << "#________________________________________________________________#" << endl;
+    cout << "┌──────────────────────────** Menu **────────────────────────────┐ " << endl;
+    cout << "│                                                                │" << endl;
+    cout << "│      Usage: ./generator {COMANDO} {ARGUMENTS} {OUTPUT FILE}    │" << endl;
+    cout << "├────────────────────────────────────────────────────────────────┤" << endl;
+    cout << "│   COMANDO:                                                     │" << endl;
+    cout << "│ - plane [SIZE]                                                 │" << endl;
+    cout << "│    Cria um plano no plano XOZ, centrado na origem.             │" << endl;
+    cout << "│                                                                │" << endl;
+    cout << "│ - box [SIZE X] [SIZE Y] [SIZE Z] [DIVISIONS]                   │" << endl;
+    cout << "│    Cria uma box com as dimensões e divisões especificadas.     │" << endl;
+    cout << "│                                                                │" << endl;
+    cout << "│ - sphere [RADIUS] [SLICES] [STACKS]                            │" << endl;
+    cout << "│    Cria uma esfera com o raio, numero de slices e stacks dadas.│" << endl;
+    cout << "│                                                                │" << endl;
+    cout << "│ - cone [RADIUS] [HEIGHT] [SLICES] [STACKS]                     │" << endl;
+    cout << "│    Cria um cone com o raio, altura, slices e stacks dadas.     │" << endl;
+    cout << "├────────────────────────────────────────────────────────────────┤" << endl;
+    cout << "│   OUTPUT FILE:                                                 │" << endl;
+    cout << "│    Ouput File tem de ser do formato 'Nome.3d'                  │" << endl;
+    cout << "│  Corresponde ao ficheiro onde vão ser guardadas as coordenadas │" << endl;
+    cout << "│          necessárias para serem lidas pela engine.             │" << endl;
+    cout << "└────────────────────────────────────────────────────────────────┘" << endl;
+}
+
+void returnError(string error){
+    cout << "Error:\n" << error << endl;
+    exit(0);
 }
 
 int main(int argc, char *argv[]) {
 
     float radius, height;
     int slices, stacks, optional;
-    string name = "";
+    string name;
 
     if (argc == 1 || strcmp(argv[1], "menu") == 0) {
         menu();
         exit(0);
     } else if (argc == 4 && strcmp(argv[1], "plane") == 0) { // plano
         name = argv[3];
+        if(!regex_match(name,regex("([a-zA-Z0-9\-_])+\.3d")))
+            returnError("Nome de ficheiro inválido\nFicheiro tem de ser do formato: 'Nomedoficheiro.3d'");
         plane(atoi(argv[2]), name);
     } else if (argc == 6 && strcmp(argv[1], "sphere") == 0) { // esfera
+        name = argv[5];
+        if(!regex_match(name,regex("([a-zA-Z0-9\-_])+\.3d")))
+            returnError("Nome de ficheiro inválido\nFicheiro tem de ser do formato: 'Nomedoficheiro.3d'");
         radius = atof(argv[2]);
         slices = atoi(argv[3]);
         stacks = atoi(argv[4]);
-        name = argv[5];
         sphere(radius, slices, stacks, name);
 
 
@@ -318,22 +326,29 @@ int main(int argc, char *argv[]) {
 
         if (argc == 6) {
             name = argv[5];
+            if(!regex_match(name,regex("([a-zA-Z0-9\-_])+\.3d")))
+                returnError("Nome de ficheiro inválido\nFicheiro tem de ser do formato: 'Nomedoficheiro.3d'");
             box(atof(argv[2]), atof(argv[3]), atof(argv[4]), -1, name);
         } else {
-            optional = atoi(argv[5]);
             name = argv[6];
+            if(!regex_match(name,regex("([a-zA-Z0-9\-_])+\.3d")))
+                returnError("Nome de ficheiro inválido\nFicheiro tem de ser do formato: 'Nomedoficheiro.3d'");
+            optional = atoi(argv[5]);
             box(atof(argv[2]), atof(argv[3]), atof(argv[4]), optional, name);
         }
 
     } else if (argc == 7 && strcmp(argv[1], "cone") == 0) { // cone
+        name = argv[6];
+        if(!regex_match(name,regex("([a-zA-Z0-9\-_])+\.3d")))
+            returnError("Nome de ficheiro inválido\nFicheiro tem de ser do formato: 'Nomedoficheiro.3d'");
         radius = atof(argv[2]);
         height = atof(argv[3]);
         slices = atoi(argv[4]);
         stacks = atoi(argv[5]);
-        name = argv[6];
         cone(radius, height, slices, stacks, name);
     } else {
-        cout << "Argumentos insuficientes" << endl;
+        cout << "Argumentos insuficientes/inválidos" << endl;
+        cout << "Para ajuda corra './generator'" << endl;
         exit(0);
     }
     cout << "Ficheiro guardado em " << PATH << name << endl;

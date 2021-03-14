@@ -29,7 +29,7 @@ string figures3dPath = "../src/Files/"; // for now
 float alpha = 0;
 float beta = 0;
 float raioCamera = 8;
-GLenum mode = GL_FILL;
+GLenum mode = GL_LINE;
 
 vector<Point> vertices;
 
@@ -105,7 +105,6 @@ void renderScene(void) {
                       ((float) (rand() % 100) / 100.0));
         }
         glVertex3f(vertices[i].getX(), vertices[i].getY(), vertices[i].getZ());
-        //printf("%f %f %f\n",vertices[i].getX(), vertices[i].getY(), vertices[i].getZ());
     }
 
     glEnd();
@@ -123,12 +122,6 @@ void keyboardspecial(int key_code, int x, int y) {
         case GLUT_KEY_DOWN:
             raioCamera += 1;
             break;
-            /*
-        case GLUT_KEY_RIGHT:
-            angleX += 1;
-        case GLUT_KEY_LEFT:
-            angleX -= 1;
-             */
 
     }
     glutPostRedisplay();
@@ -192,6 +185,12 @@ void readfile(string ficheiro) {
     }
 }
 
+void returnError(string error){
+    cout << "Error:\n" << error << endl;
+    exit(0);
+}
+
+
 int readXML(string file) {
     XMLDocument xmldoc;
     if (!(xmldoc.LoadFile((XMLPath + file).c_str()))) {
@@ -199,8 +198,10 @@ int readXML(string file) {
 
         for (XMLElement *element = pRootElement->FirstChildElement(); element; element = element->NextSiblingElement()) {
             string ficheiro = element->Attribute("file");
-            cout << "Ficheiro: " << ficheiro << " lido com sucesso " << endl;
+            if(!regex_match(ficheiro,regex("([a-zA-Z0-9\-_])+\.3d")))
+                returnError("XML inválido\nFicheiro tem de ser do formato: 'Nomedoficheiro.3d'\n"+file+" não carregado");
             readfile(figures3dPath + ficheiro);
+            cout << "Ficheiro: " << ficheiro << " lido com sucesso " << endl;
         }
         return 1;
     } else {
@@ -209,14 +210,35 @@ int readXML(string file) {
 
 }
 
+void menu(){
+    cout << "┌────────** MENU **─────────┐" << endl;
+    cout << "│    Modo de utilização:    │" << endl;
+    cout << "│    ./engine {file.xml}    │" << endl;
+    cout << "├───────────────────────────┤" << endl;
+    cout << "│          Teclas:          │" << endl;
+    cout << "│   Mover câmera: W A S D   │" << endl;
+    cout << "│  Zoom in : Up_arrow_key   │" << endl;
+    cout << "│ Zoom out : Down_arrow_key │" << endl;
+    cout << "│     ativar GL_Point : P   │" << endl;
+    cout << "│     ativar GL_Line : L    │" << endl;
+    cout << "│     ativar GL_Fill : F    │" << endl;
+    cout << "├───────────────────────────┤" << endl;
+    cout << "│  nota: .xml tem de estar  │" << endl;
+    cout << "│   na pasta \"/src/Files/\"  │" << endl;
+    cout << "└───────────────────────────┘" << endl;
+
+}
+
 int main(int argc, char **argv) {
 
     if(argc != 2 || !regex_match(argv[1],regex("([a-zA-Z0-9\-_])+\.xml"))){
-        cout << "Argumentos inválidos\nComando:>> ./engine {file.xml}" << endl;
+        cout << "Argumentos inválidos" << endl;
+        menu();
         exit(0);
     }
     if(!readXML(argv[1])){
         cout << "Ficheiro Inválido ou Mal escrito\nCertificar que o ficheiro se encontra em /src/Files/" << endl;
+        menu();
         exit(0);
     }
 
