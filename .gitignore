@@ -5,3 +5,4 @@ build
 *.3d
 .DS_Store
 src/.DS_Store
+toolkits/*
