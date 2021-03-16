@@ -14,7 +14,7 @@ class Point {
 
     public:
         Point();
-        Point(float,float,float);
+        Point(float, float, float);
         float getX();
         float getY();
         float getZ();

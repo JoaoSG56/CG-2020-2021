@@ -17,7 +17,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include "../headers/Point.h"
+#include "../headers/point.h"
 #include <regex>
 
 using namespace tinyxml2;

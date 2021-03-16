@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.5)
 # Project Name
 PROJECT(engine)
 
-set(ENGINE_FILES src/Engine/engine.cpp src/Engine/tinyxml2.cpp src/headers/tinyxml2.h src/Engine/Point.cpp src/headers/Point.h)
+set(ENGINE_FILES src/Engine/engine.cpp src/Engine/tinyxml2.cpp src/headers/tinyxml2.h src/Engine/point.cpp src/headers/point.h src/headers/figure.h src/Engine/figure.cpp)
 
 add_executable(engine ${ENGINE_FILES})
 
@@ -58,7 +58,7 @@ endif(WIN32)
 # Project Name
 PROJECT(generator)
 
-set(GENERATOR_FILES src/Generator/generator.cpp src/headers/generator.h src/Engine/tinyxml2.cpp src/headers/tinyxml2.h)
+set(GENERATOR_FILES src/Generator/generator.cpp src/headers/generator.h src/Engine/tinyxml2.cpp src/headers/tinyxml2.h src/headers/figure.h)
 
 add_executable(generator ${GENERATOR_FILES})
 
