@@ -51,17 +51,73 @@ void parseModels(XMLElement *element, Group *group) {
 
 }
 
-void parseTranslation(XMLElement *element);
+void parseTranslation(XMLElement *element, Group *group) {
+    float x = 0;
+    float y = 0;
+    float z = 0;
+
+    element->QueryFloatAttribute("X",&x);
+    element->QueryFloatAttribute("Y",&y);
+    element->QueryFloatAttribute("Z",&z);
+
+    Translation* t = new Translation(x,y,z);
+    group->pushTransform(t);
+
+}
+
+void parseRotation(XMLElement *element, Group *group) {
+    float x = 0;
+    float y = 0;
+    float z = 0;
+
+    float angle = 0;
+
+    element->QueryFloatAttribute("axisX",&x);
+    element->QueryFloatAttribute("axisY",&y);
+    element->QueryFloatAttribute("axisZ",&z);
+
+    element->QueryFloatAttribute("angle",&angle);
+
+    Rotation* r = new Rotation(angle,x,y,z);
+    group->pushTransform(r);
+
+}
+
+void parseScale(XMLElement *element, Group *group) {
+    float x = 0;
+    float y = 0;
+    float z = 0;
+
+    element->QueryFloatAttribute("X",&x);
+    element->QueryFloatAttribute("Y",&y);
+    element->QueryFloatAttribute("Z",&z);
+
+    Scale* s = new Scale(x,y,z);
+    group->pushTransform(s);
+
+}
 
 void parseGroup(XMLElement *element, Group *group) {
     XMLElement *current = element;
 
-    if (!(strcmp(element->Name(), "translate")));
+    if (!(strcmp(element->Name(), "translate"))) {
+        printf("found translate\n");
+        parseTranslation(element, group);
+        printf("out translate\n");
+    }
 
         //...
-    else if (!(strcmp(element->Name(), "rotate")));
+    else if (!(strcmp(element->Name(), "rotate"))){
+        printf("found rotate\n");
+        parseRotation(element, group);
+        printf("out rotate\n");
+    }
 
-    else if (!(strcmp(element->Name(), "scale")));
+    else if (!(strcmp(element->Name(), "scale"))){
+        printf("found scale\n");
+        parseScale(element, group);
+        printf("out scale\n");
+    }
 
     else if (!(strcmp(element->Name(), "models"))) {
         printf("found models\n");
@@ -98,13 +154,12 @@ int readXML(string file, Group *group) {
         parseGroup(element, group);
 
 
-
-        vector<Figure*> fig = group->getFigures();
-        for(int j = 0; j < fig.size(); j++){
-            printf("\n\n\n%d\n",j);
-            vector<Vertex*> vert = fig[j]->getVertexes();
-            for(int i = 0; i < vert.size(); i++){
-                printf("%f %f %f\n",vert[i]->getX(),vert[i]->getY(),vert[i]->getZ());
+        vector<Figure *> fig = group->getFigures();
+        for (int j = 0; j < fig.size(); j++) {
+            printf("\n\n\n%d\n", j);
+            vector<Vertex *> vert = fig[j]->getVertexes();
+            for (int i = 0; i < vert.size(); i++) {
+                printf("%f %f %f\n", vert[i]->getX(), vert[i]->getY(), vert[i]->getZ());
             }
         }
 

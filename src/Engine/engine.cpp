@@ -82,8 +82,8 @@ void render(Group* group) {
     glPushMatrix();
 
     vector<Transform*> tranformations = group->getTransforms();
-    //for (int i = 0; i < tranformations.size(); i++)
-    //    tranformations[i]->execute();
+    for (int i = 0; i < tranformations.size(); i++)
+        tranformations[i]->execute();
 
     vector<Figure*> figures = group->getFigures();
     for(int i = 0; i< figures.size();i++)
