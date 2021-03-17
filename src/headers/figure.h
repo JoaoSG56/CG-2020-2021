@@ -2,7 +2,7 @@
 #define GENERATOR_FIGURES_H
 
 #include <vector>
-#include "point.h"
+#include "vertex.h"
 #ifdef __APPLE__
 #include <GLUT/glut.h>
 #else
@@ -11,12 +11,13 @@
 
 class Figure{
     private:
-        std::vector<Point*> vertexes;
+        std::vector<Vertex*> vertexes;
 
     public:
-        void pushVertex(Point* v);
+        void pushVertex(Vertex* v);
         int getSize();
-        std::vector<Point*> getVertexes();
+        std::vector<Vertex*> getVertexes();
+        void draw(GLenum mode);
 };
 
 #endif //GENERATOR_FIGURES_H

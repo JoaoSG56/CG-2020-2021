@@ -1,20 +1,20 @@
 
-#ifndef GENERATOR_POINT_H
-#define GENERATOR_POINT_H
+#ifndef GENERATOR_VERTEX_H
+#define GENERATOR_VERTEX_H
 
 #include <math.h>
 #include <string>
 
 using namespace std;
 
-class Point {
+class Vertex {
     float x;
     float y;
     float z;
 
     public:
-        Point();
-        Point(float, float, float);
+        Vertex();
+        Vertex(float, float, float);
         float getX();
         float getY();
         float getZ();
@@ -25,4 +25,4 @@ class Point {
 };
 
 
-#endif //GENERATOR_POINT_H
+#endif //GENERATOR_VERTEX_H

@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.5)
 # Project Name
 PROJECT(engine)
 
-set(ENGINE_FILES src/Engine/engine.cpp src/Engine/tinyxml2.cpp src/headers/tinyxml2.h src/Engine/point.cpp src/headers/point.h src/headers/figure.h src/Engine/figure.cpp)
+set(ENGINE_FILES src/Engine/engine.cpp src/Engine/tinyxml2.cpp src/headers/tinyxml2.h src/Engine/vertex.cpp src/headers/vertex.h src/headers/figure.h src/Engine/figure.cpp src/Engine/group.cpp src/headers/group.h src/Engine/transforms.cpp src/headers/transforms.h src/headers/parser.h src/Engine/parser.cpp)
 
 add_executable(engine ${ENGINE_FILES})
 

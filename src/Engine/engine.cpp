@@ -3,28 +3,26 @@
 
 #include <GLUT/glut.h>
 
-
 #else
 #include <stdlib.h>
 #include <GL/glut.h>
 #endif
 
 #define _USE_MATH_DEFINES
-#include "../headers/tinyxml2.h"
+
+
 #include <cmath>
 #include <vector>
 #include <string>
 #include <iostream>
-#include <fstream>
-#include <sstream>
-#include "../headers/point.h"
+#include "../headers/vertex.h"
 #include <regex>
+#include "../headers/group.h"
+#include "../headers/parser.h"
+
 
 using namespace tinyxml2;
 using namespace std;
-
-string XMLPath = "../src/Files/"; // for now
-string figures3dPath = "../src/Files/"; // for now
 
 
 float alpha = 0;
@@ -32,7 +30,9 @@ float beta = 0;
 float raioCamera = 8;
 GLenum mode = GL_LINE;
 
-vector<Point> vertices;
+vector<Vertex> vertices;
+
+Group *scene = new Group();
 
 void eixos() {
     glBegin(GL_LINES);
@@ -78,6 +78,24 @@ void changeSize(int w, int h) {
 }
 
 
+void render(Group* group) {
+    glPushMatrix();
+
+    vector<Transform*> tranformations = group->getTransforms();
+    //for (int i = 0; i < tranformations.size(); i++)
+    //    tranformations[i]->execute();
+
+    vector<Figure*> figures = group->getFigures();
+    for(int i = 0; i< figures.size();i++)
+        figures[i]->draw(mode);
+
+    vector<Group*> children = group->getChilds();
+    for(int i = 0; i< children.size();i++)
+        render(children[i]);
+
+    glPopMatrix();
+}
+
 void renderScene(void) {
 
     // clear buffers
@@ -91,9 +109,10 @@ void renderScene(void) {
     eixos();
 
 // put the geometric transformations here
-    glPolygonMode(GL_FRONT,mode);
+    //glPolygonMode(GL_FRONT, mode);
 
 // put drawing instructions here
+/*
     glBegin(GL_TRIANGLES);
     // vector drawn
     int size = vertices.size();
@@ -106,6 +125,8 @@ void renderScene(void) {
     }
 
     glEnd();
+    */
+    render(scene);
 
     // End of frame
     glutSwapBuffers();
@@ -159,64 +180,13 @@ void keyboardfunc(unsigned char key, int x, int y) {
     glutPostRedisplay();
 }
 
-void returnError(string error){
+void returnError(string error) {
     cout << "Error:\n" << error << endl;
     //exit(0);
 }
 
-int readfile(string ficheiro) {
-    string delimiter = " ";
-    ifstream inputFileStream(ficheiro);
-    if(!inputFileStream.is_open()){
-        returnError("Ficheiro '" + ficheiro + "' não encontrado");
-        return 0;
-    }
-    int count;
-    inputFileStream >> count;
-    inputFileStream.ignore(1, '\n');
 
-    for (int i = 0; i < count; i++) {
-        string line;
-        getline(inputFileStream, line);
-
-        istringstream lineStream(line);
-        string a, b, c;
-        getline(lineStream, a, ' ');
-        getline(lineStream, b, ' ');
-        getline(lineStream, c, ' ');
-
-
-        vertices.push_back(*new Point(atof(a.c_str()), atof(b.c_str()), atof(c.c_str())));
-
-    }
-    return 1;
-}
-
-
-int readXML(string file) {
-    XMLDocument xmldoc;
-    if (!(xmldoc.LoadFile((XMLPath + file).c_str()))) {
-        XMLElement *pRootElement = xmldoc.FirstChildElement();
-
-        for (XMLElement *element = pRootElement->FirstChildElement(); element; element = element->NextSiblingElement()) {
-            string ficheiro = element->Attribute("file");
-            if(!regex_match(ficheiro,regex("([a-zA-Z0-9\-_])+\.3d"))) {
-                returnError("XML inválido\nFicheiro tem de ser do formato: 'Nomedoficheiro.3d'\n" + file +
-                            " não carregado");
-                return 0;
-            }
-
-            if(!readfile(figures3dPath + ficheiro)) return 0;
-            cout << "Ficheiro: " << ficheiro << " lido com sucesso " << endl;
-        }
-        return 1;
-    } else {
-        return 0;
-    }
-
-}
-
-void menu(){
+void menu() {
     cout << "#--------** MENU **---------#" << endl;
     cout << "|    Modo de utilização:    |" << endl;
     cout << "|    ./engine {file.xml}    |" << endl;
@@ -237,18 +207,19 @@ void menu(){
 
 int main(int argc, char **argv) {
 
-    if(argc != 2 || !regex_match(argv[1],regex("([a-zA-Z0-9\-_])+\.xml"))){
+    if (argc != 2 || !regex_match(argv[1], regex("([a-zA-Z0-9\-_])+\.xml"))) {
         cout << "Argumentos inválidos" << endl;
         menu();
         //exit(0);
         return 0;
     }
-    if(!readXML(argv[1])){
+    if (!readXML(argv[1], scene)) {
         cout << "Ficheiro Inválido ou Mal escrito\nCertificar que o ficheiro se encontra em /src/Files/" << endl;
         menu();
         //exit(0);
         return 0;
     }
+
 
 // init GLUT and the window
     glutInit(&argc, argv);

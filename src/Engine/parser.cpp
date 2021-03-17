@@ -4,11 +4,14 @@
 using namespace tinyxml2;
 using namespace std;
 
-int readfile(string ficheiro, vector<Point> vertices) {
+std::string XMLPath = "../src/Files/"; // for now
+std::string figures3dPath = "../src/Files/"; // for now
+
+int readfile(string ficheiro, Figure *f) {
     string delimiter = " ";
     ifstream inputFileStream(ficheiro);
-    if(!inputFileStream.is_open()){
-        //returnError("Ficheiro '" + ficheiro + "' não encontrado");
+    if (!inputFileStream.is_open()) {
+        cout << "Ficheiro '" + ficheiro + "' não encontrado" << endl;
         return 0;
     }
     int count;
@@ -25,32 +28,92 @@ int readfile(string ficheiro, vector<Point> vertices) {
         getline(lineStream, b, ' ');
         getline(lineStream, c, ' ');
 
-
-        vertices.push_back(*new Point(atof(a.c_str()), atof(b.c_str()), atof(c.c_str())));
+        Vertex *v = new Vertex(atof(a.c_str()), atof(b.c_str()), atof(c.c_str()));
+        f->pushVertex(v);
 
     }
     return 1;
 }
 
-int readXML(string file, vector<Point> vertices) {
-    XMLDocument xmldoc;
-    if (!(xmldoc.LoadFile((XMLPath + file).c_str()))) {
-        XMLElement *pRootElement = xmldoc.FirstChildElement();
+void parseModels(XMLElement *element, Group *group) {
 
-        for (XMLElement *element = pRootElement->FirstChildElement(); element; element = element->NextSiblingElement()) {
-            string ficheiro = element->Attribute("file");
-            if(!regex_match(ficheiro,regex("([a-zA-Z0-9\-_])+\.3d"))) {
-                //returnError("XML inválido\nFicheiro tem de ser do formato: 'Nomedoficheiro.3d'\n" + file +
-                 //           " não carregado");
-                return -1; // ajustar
-            }
-
-            if(!readfile(figures3dPath + ficheiro,vertices)) return 0;
-            cout << "Ficheiro: " << ficheiro << " lido com sucesso " << endl;
+    for (element = element->FirstChildElement(); element; element = element->NextSiblingElement()) {
+        string ficheiro = element->Attribute("file");
+        if (!regex_match(ficheiro, regex("([a-zA-Z0-9\-_])+\.3d"))) {
+            cout << "XML inválido\nFicheiro tem de ser do formato: 'Nomedoficheiro.3d'\nnão carregado" << endl;
+            return;
         }
-        return 1;
-    } else {
-        return 0;
+        Figure *f = new Figure();
+        if (!readfile(figures3dPath + ficheiro, f)) return;
+        group->pushFigure(f);
+        cout << "Ficheiro: " << ficheiro << " lido com sucesso " << endl;
     }
 
 }
+
+void parseTranslation(XMLElement *element);
+
+void parseGroup(XMLElement *element, Group *group) {
+    XMLElement *current = element;
+
+    if (!(strcmp(element->Name(), "translate")));
+
+        //...
+    else if (!(strcmp(element->Name(), "rotate")));
+
+    else if (!(strcmp(element->Name(), "scale")));
+
+    else if (!(strcmp(element->Name(), "models"))) {
+        printf("found models\n");
+        parseModels(element, group);
+        printf("out\n");
+    } else if (!(strcmp(element->Name(), "group"))) {
+        printf("found group \n");
+        Group *child = new Group();
+
+        group->pushGroup(child);
+
+        element = element->FirstChildElement();
+
+        parseGroup(element, child);
+    }
+    current = current->NextSiblingElement();
+    if (current) {
+        printf("vai a outro\n");
+        parseGroup(current, group);
+    }
+    printf("vai sair\n");
+
+}
+
+
+int readXML(string file, Group *group) {
+
+    XMLDocument xmlDoc;
+    XMLElement *element;
+
+    if (!(xmlDoc.LoadFile((XMLPath + file).c_str()))) {
+        element = xmlDoc.FirstChildElement("scene")->FirstChildElement(); // <group>
+
+        parseGroup(element, group);
+
+
+
+        vector<Figure*> fig = group->getFigures();
+        for(int j = 0; j < fig.size(); j++){
+            printf("\n\n\n%d\n",j);
+            vector<Vertex*> vert = fig[j]->getVertexes();
+            for(int i = 0; i < vert.size(); i++){
+                printf("%f %f %f\n",vert[i]->getX(),vert[i]->getY(),vert[i]->getZ());
+            }
+        }
+
+        return 1;
+    } else {
+        printf("ups\n");
+    }
+    return 0;
+
+}
+
+
