@@ -15,22 +15,32 @@
 #include <vector>
 #include <string>
 #include <iostream>
-#include "../headers/vertex.h"
+#include "../headers/point.h"
 #include <regex>
 #include "../headers/group.h"
 #include "../headers/parser.h"
+#include "../headers/camera.h"
 
 
 using namespace tinyxml2;
 using namespace std;
 
+bool firstMouse = true;
 
 float alpha = 0;
 float beta = 0;
 float raioCamera = 8;
 GLenum mode = GL_LINE;
+float lastX;
+float lastY;
 
-vector<Vertex> vertices;
+int window;
+int menu_id;
+bool fps_cam = true;
+
+int timebase = 0, frame = 0;
+
+Camera* camera = new Camera();
 
 Group *scene = new Group();
 
@@ -51,6 +61,20 @@ void eixos() {
     glEnd();
 }
 
+void displayFPS() {
+    int time;
+    char title[25];
+
+    frame++;
+    time = glutGet(GLUT_ELAPSED_TIME);
+    if (time - timebase > 1000) {
+        float fps = frame * 1000.0/(time - timebase);
+        timebase = time;
+        frame = 0;
+        sprintf(title,"Engine  |  %.2f FPS",fps);
+        glutSetWindowTitle(title);
+    }
+}
 
 void changeSize(int w, int h) {
 
@@ -103,30 +127,23 @@ void renderScene(void) {
 
     // set the camera
     glLoadIdentity();
-    gluLookAt(raioCamera * cos(alpha) * sin(beta), raioCamera * sin(alpha), raioCamera * cos(alpha) * cos(beta),
-              0.0, 0.0, 0.0,
-              0.0f, 1.0f, 0.0f);
+    if(fps_cam) {
+        Point *focus = camera->getFocus();
+        gluLookAt(camera->getPosition()->getX(), camera->getPosition()->getY(), camera->getPosition()->getZ(),
+                  focus->getX(), focus->getY(), focus->getZ(),
+                  0.0f, 1.0f, 0.0f);
+    }
+    else{
+        Point *pos = camera->getStaticPosition();
+        gluLookAt(pos->getX(), pos->getY(), pos->getZ(),
+                  0,0,0,
+                  0,1,0);
+    }
     eixos();
 
-// put the geometric transformations here
-    //glPolygonMode(GL_FRONT, mode);
-
-// put drawing instructions here
-/*
-    glBegin(GL_TRIANGLES);
-    // vector drawn
-    int size = vertices.size();
-    for (int i = 0; i < size; i++) {
-        if (i % 3 == 0) {
-            glColor3f(((float) (rand() % 100) / 100.0), ((float) (rand() % 100) / 100.0),
-                      ((float) (rand() % 100) / 100.0));
-        }
-        glVertex3f(vertices[i].getX(), vertices[i].getY(), vertices[i].getZ());
-    }
-
-    glEnd();
-    */
     render(scene);
+
+    displayFPS();
 
     // End of frame
     glutSwapBuffers();
@@ -134,14 +151,26 @@ void renderScene(void) {
 
 void keyboardspecial(int key_code, int x, int y) {
     switch (key_code) {
-
+/*
         case GLUT_KEY_UP:
             raioCamera -= 1;
             break;
         case GLUT_KEY_DOWN:
             raioCamera += 1;
             break;
-
+*/
+        case GLUT_KEY_UP:
+            camera->moveFoward();
+            break;
+        case GLUT_KEY_DOWN:
+            camera->moveBackwards();
+            break;
+        case GLUT_KEY_LEFT:
+            camera->moveLeft();
+            break;
+        case GLUT_KEY_RIGHT:
+            camera->moveRight();
+            break;
     }
     glutPostRedisplay();
 }
@@ -149,22 +178,6 @@ void keyboardspecial(int key_code, int x, int y) {
 // write function to process keyboard events
 void keyboardfunc(unsigned char key, int x, int y) {
     switch (key) {
-        case 'w':
-            if (alpha < (0.9 * M_PI_2)) {
-                alpha += M_PI / 32;
-            }
-            break;
-        case 's':
-            if (alpha > (-0.9 * M_PI_2)) {
-                alpha -= M_PI / 32;
-            }
-            break;
-        case 'a':
-            beta -= M_PI / 32;
-            break;
-        case 'd':
-            beta += M_PI / 32;
-            break;
         case 'p':
             mode = GL_POINT;
             break;
@@ -175,14 +188,56 @@ void keyboardfunc(unsigned char key, int x, int y) {
             mode = GL_FILL;
             break;
         default:
+            camera->turnStatic(key);
             break;
     }
     glutPostRedisplay();
 }
 
+void moveMouse(int x, int y ){
+    if(!fps_cam) return;
+
+
+    float centerX = glutGet(GLUT_WINDOW_WIDTH)/2;
+    float centerY = glutGet(GLUT_WINDOW_HEIGHT)/2;
+
+    float dx = x - centerX;
+    float dy = y - centerY;
+
+
+
+    camera->turn(dx,dy);
+
+    glutWarpPointer(centerX,centerY);
+    glutPostRedisplay();
+
+}
+
 void returnError(string error) {
     cout << "Error:\n" << error << endl;
     //exit(0);
+}
+
+void menuChoice(int num){
+    switch (num) {
+        case 1:
+            fps_cam = true;
+            break;
+        case 0:
+            fps_cam = false;
+            break;
+        case -1:
+            glutDestroyWindow(window);
+            exit(0);
+    }
+}
+
+void createMenu(){
+    menu_id = glutCreateMenu(menuChoice);
+    glutAddMenuEntry("FPS Camera",1);
+    glutAddMenuEntry("Static Camera",0);
+    glutAddMenuEntry("Quit",-1);
+    glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 
 
@@ -226,22 +281,31 @@ int main(int argc, char **argv) {
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
     glutInitWindowPosition(100, 100);
     glutInitWindowSize(800, 800);
-    glutCreateWindow("CG@2020-2021");
+    window = glutCreateWindow("CG@2020-2021");
+
+
 
 // Required callback registry
     glutDisplayFunc(renderScene);
+    glutIdleFunc(renderScene);
     glutReshapeFunc(changeSize);
 
 
 // put here the registration of the keyboard callbacks
     glutKeyboardFunc(keyboardfunc);
     glutSpecialFunc(keyboardspecial);
-
+    glutPassiveMotionFunc(moveMouse);
 
 //  OpenGL settings
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
 
+    createMenu();
+
+    glutSetCursor(GLUT_CURSOR_NONE);
+    float centerX = glutGet(GLUT_WINDOW_WIDTH)/2;
+    float centerY = glutGet(GLUT_WINDOW_HEIGHT)/2;
+    glutWarpPointer(centerX,centerY);
 // enter GLUT's main cycle
     glutMainLoop();
 

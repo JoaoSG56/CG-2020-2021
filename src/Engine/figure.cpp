@@ -2,7 +2,7 @@
 
 using std::vector;
 
-void Figure::pushVertex(Vertex *v) {
+void Figure::pushVertex(Point *v) {
     vertexes.push_back(v);
 }
 
@@ -10,14 +10,14 @@ int Figure::getSize() {
     return vertexes.size();
 }
 
-vector<Vertex *> Figure::getVertexes() {
+vector<Point *> Figure::getVertexes() {
     return vertexes;
 }
 
 void Figure::draw(GLenum mode) {
     glPolygonMode(GL_FRONT_AND_BACK, mode);
 
-    vector<Vertex *> v = getVertexes();
+    vector<Point *> v = getVertexes();
 
     glBegin(GL_TRIANGLES);
 

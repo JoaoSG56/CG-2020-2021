@@ -6,7 +6,7 @@
 #include <regex>
 #include <fstream>
 #include <sstream>
-#include "vertex.h"
+#include "point.h"
 #include <iostream>
 #include "group.h"
 

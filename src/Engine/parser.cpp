@@ -28,7 +28,7 @@ int readfile(string ficheiro, Figure *f) {
         getline(lineStream, b, ' ');
         getline(lineStream, c, ' ');
 
-        Vertex *v = new Vertex(atof(a.c_str()), atof(b.c_str()), atof(c.c_str()));
+        Point *v = new Point(atof(a.c_str()), atof(b.c_str()), atof(c.c_str()));
         f->pushVertex(v);
 
     }
@@ -157,7 +157,7 @@ int readXML(string file, Group *group) {
         vector<Figure *> fig = group->getFigures();
         for (int j = 0; j < fig.size(); j++) {
             printf("\n\n\n%d\n", j);
-            vector<Vertex *> vert = fig[j]->getVertexes();
+            vector<Point *> vert = fig[j]->getVertexes();
             for (int i = 0; i < vert.size(); i++) {
                 printf("%f %f %f\n", vert[i]->getX(), vert[i]->getY(), vert[i]->getZ());
             }

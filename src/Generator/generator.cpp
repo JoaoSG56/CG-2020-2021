@@ -1,6 +1,35 @@
 #include <regex>
 #include "../headers/generator.h"
 
+void torus(float distance, float radius, int slices , int stacks, string nome) {
+    ofstream file(PATH + nome);
+
+
+    float theta = 0;
+    float phi = 0;
+    float theta_shift = (2*M_PI)/slices;
+    float phi_shift = (2*M_PI)/stacks;
+    file << slices*stacks*6 << cout;
+    for(int i = 0; i < slices; i++){
+        for(int j = 0; j < stacks; j++){
+            file << cos(theta)*(distance + radius * cos(phi))<< " " << sin(theta)*(distance + radius * cos(phi)) << " " << radius*sin(phi) << endl;
+            file << cos(theta + theta_shift)*(distance + radius * cos(phi))<< " " << sin(theta + theta_shift)*(distance + radius * cos(phi)) << " " << radius*sin(phi) << endl;
+            file << cos(theta + theta_shift)*(distance + radius * cos(phi + phi_shift))<< " " << sin(theta+theta_shift)*(distance + radius * cos(phi+phi_shift)) << " " << radius*sin(phi+phi_shift) << endl;
+
+
+
+            file << cos(theta + theta_shift)*(distance + radius * cos(phi + phi_shift)) << " " << sin(theta+theta_shift)*(distance + radius * cos(phi+phi_shift)) << " " << radius*sin(phi+phi_shift) << endl;
+            file << cos(theta)*(distance + radius * cos(phi + phi_shift)) << " " << sin(theta)*(distance + radius * cos(phi + phi_shift)) << " " <<radius*sin(phi + phi_shift) << endl;
+            file << cos(theta)*(distance + radius * cos(phi)) << " " << sin(theta)*(distance + radius * cos(phi)) << " " << radius*sin(phi) << endl;
+
+            phi = phi_shift * (j + 1);
+        }
+        theta = theta_shift * (i + 1);
+    }
+//torus 5 3 20 20 torus.3d
+
+}
+
 void plane(int lado, string nome) {
     ofstream file(PATH + nome);
     float x, y, z;
@@ -130,8 +159,7 @@ void sphere(float radius, int slices, int stacks, string nome) {
     float y1, y2, y3;
     float z1, z2, z3;
 
-    file << 6 * slices * (stacks-2) + 6 * slices << endl;
-
+    file << 6 * slices * (stacks - 2) + 6 * slices << endl;
 
 
     for (int i = 0; i < stacks / 2; i++) {
@@ -293,20 +321,19 @@ void menu() {
     cout << "#----------------------------------------------------------------#" << endl;
 }
 
-void returnError(string error){
+void returnError(string error) {
     cout << "Error:\n" << error << endl;
     //exit(0);
 }
 
-int isFileValid(string fileName){
-    return(regex_match(fileName,regex("([a-zA-Z0-9\-_])+\.3d")));
+int isFileValid(string fileName) {
+    return (regex_match(fileName, regex("([a-zA-Z0-9\-_])+\.3d")));
 }
 
 int main(int argc, char *argv[]) {
-    if(OS_Windows) {
+    if (OS_Windows) {
         system("mkdir ..\\src\\Files\\");
-    }
-    else
+    } else
         system("mkdir -p ../src/Files/");
     float radius, height;
     int slices, stacks, optional;
@@ -317,14 +344,14 @@ int main(int argc, char *argv[]) {
         return 0;
     } else if (argc == 4 && strcmp(argv[1], "plane") == 0) { // plano
         name = argv[3];
-        if(!isFileValid(name)) {
+        if (!isFileValid(name)) {
             returnError("Nome de ficheiro inválido\nFicheiro tem de ser do formato: 'Nomedoficheiro.3d'");
             return 0;
         }
         plane(atoi(argv[2]), name);
     } else if (argc == 6 && strcmp(argv[1], "sphere") == 0) { // esfera
         name = argv[5];
-        if(!isFileValid(name)) {
+        if (!isFileValid(name)) {
             returnError("Nome de ficheiro inválido\nFicheiro tem de ser do formato: 'Nomedoficheiro.3d'");
             return 0;
         }
@@ -338,24 +365,31 @@ int main(int argc, char *argv[]) {
 
         if (argc == 6) {
             name = argv[5];
-            if(!isFileValid(name)) {
+            if (!isFileValid(name)) {
                 returnError("Nome de ficheiro inválido\nFicheiro tem de ser do formato: 'Nomedoficheiro.3d'");
                 return 0;
             }
             box(atof(argv[2]), atof(argv[3]), atof(argv[4]), -1, name);
         } else {
             name = argv[6];
-            if(!isFileValid(name)) {
+            if (!isFileValid(name)) {
                 returnError("Nome de ficheiro inválido\nFicheiro tem de ser do formato: 'Nomedoficheiro.3d'");
                 return 0;
             }
             optional = atoi(argv[5]);
             box(atof(argv[2]), atof(argv[3]), atof(argv[4]), optional, name);
         }
+    } else if (argc == 7 && strcmp(argv[1], "torus") == 0) {
+        name = argv[6];
+        if (!isFileValid(name)) {
+            returnError("Nome de ficheiro inválido\nFicheiro tem de ser do formato: 'Nomedoficheiro.3d'");
+            return 0;
+        }
+        torus(atof(argv[2]), atof(argv[3]), atoi(argv[4]), atoi(argv[5]), name);
 
     } else if (argc == 7 && strcmp(argv[1], "cone") == 0) { // cone
         name = argv[6];
-        if(!isFileValid(name)) {
+        if (!isFileValid(name)) {
             returnError("Nome de ficheiro inválido\nFicheiro tem de ser do formato: 'Nomedoficheiro.3d'");
             return 0;
         }
