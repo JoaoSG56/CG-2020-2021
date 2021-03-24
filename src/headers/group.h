@@ -10,6 +10,7 @@ class Group {
     std::vector<Transform*> transforms;
     std::vector<Figure*> figures;
     std::vector<Group*> childs;
+    float R, G, B;
 
     public:
         Group();
@@ -20,7 +21,10 @@ class Group {
         void pushTransform(Transform* t);
         void pushFigure(Figure* f);
         void pushGroup(Group* g);
-
+        float getR();
+        float getG();
+        float getB();
+        void setRGB(float,float,float);
 };
 
 #endif //GENERATOR_GROUP_H

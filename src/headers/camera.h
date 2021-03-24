@@ -1,7 +1,7 @@
 
 #ifndef GENERATOR_CAMERA_H
 #define GENERATOR_CAMERA_H
-
+#define _USE_MATH_DEFINES
 #include "point.h"
 
 class Camera{

@@ -17,7 +17,7 @@ class Figure{
         void pushVertex(Point* v);
         int getSize();
         std::vector<Point*> getVertexes();
-        void draw(GLenum mode);
+        void draw(GLenum , float ,float,float);
 };
 
 #endif //GENERATOR_FIGURES_H

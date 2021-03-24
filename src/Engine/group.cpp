@@ -1,12 +1,19 @@
 
 #include "../headers/group.h"
 
-Group::Group()= default;
+Group::Group() {
+    R = 1;
+    G = 1;
+    B = 1;
+}
 
 Group::Group(std::vector<Transform*> t, std::vector<Figure*> f, std::vector<Group*> c){
     transforms = t;
     figures = f;
     childs = c;
+    R = 1;
+    G = 1;
+    B = 1;
 }
 
 std::vector<Transform*> Group::getTransforms(){
@@ -26,4 +33,20 @@ void Group::pushFigure(Figure* f){
 }
 void Group::pushGroup(Group* g){
     childs.push_back(g);
+}
+
+float Group::getR() {
+    return R;
+}
+float Group::getG() {
+    return G;
+}
+float Group::getB() {
+    return B;
+}
+
+void Group::setRGB(float r, float g, float b) {
+    R = r;
+    G = g;
+    B = b;
 }

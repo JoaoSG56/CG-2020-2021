@@ -9,7 +9,7 @@ void torus(float distance, float radius, int slices , int stacks, string nome) {
     float phi = 0;
     float theta_shift = (2*M_PI)/slices;
     float phi_shift = (2*M_PI)/stacks;
-    file << slices*stacks*6 << cout;
+    file << slices*stacks*6 << endl;
     for(int i = 0; i < slices; i++){
         for(int j = 0; j < stacks; j++){
             file << cos(theta)*(distance + radius * cos(phi))<< " " << sin(theta)*(distance + radius * cos(phi)) << " " << radius*sin(phi) << endl;
@@ -29,6 +29,7 @@ void torus(float distance, float radius, int slices , int stacks, string nome) {
 //torus 5 3 20 20 torus.3d
 
 }
+
 
 void plane(int lado, string nome) {
     ofstream file(PATH + nome);

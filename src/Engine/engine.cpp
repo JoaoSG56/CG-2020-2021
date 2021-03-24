@@ -21,6 +21,7 @@
 #include "../headers/parser.h"
 #include "../headers/camera.h"
 
+#define ESCAPE 27
 
 using namespace tinyxml2;
 using namespace std;
@@ -108,10 +109,13 @@ void render(Group* group) {
     vector<Transform*> tranformations = group->getTransforms();
     for (int i = 0; i < tranformations.size(); i++)
         tranformations[i]->execute();
-
+   // float R = 1, G = 1, B = 1;
+    float R = group->getR();
+    float G = group->getG();
+    float B = group->getB();
     vector<Figure*> figures = group->getFigures();
     for(int i = 0; i< figures.size();i++)
-        figures[i]->draw(mode);
+        figures[i]->draw(mode,R,G,B);
 
     vector<Group*> children = group->getChilds();
     for(int i = 0; i< children.size();i++)
@@ -187,13 +191,15 @@ void keyboardfunc(unsigned char key, int x, int y) {
         case 'f':
             mode = GL_FILL;
             break;
+        case ESCAPE:
+            glutDestroyWindow(window);
+            exit(0);
         default:
             camera->turnStatic(key);
             break;
     }
     glutPostRedisplay();
 }
-
 void moveMouse(int x, int y ){
     if(!fps_cam) return;
 

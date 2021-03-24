@@ -97,34 +97,37 @@ void parseScale(XMLElement *element, Group *group) {
 
 }
 
+void parseColour(XMLElement* element, Group* group) {
+    float R = 0, G = 0, B = 0;
+
+    element->QueryFloatAttribute("R", &R);
+    element->QueryFloatAttribute("G", &G);
+    element->QueryFloatAttribute("B", &B);
+
+    group->setRGB(R, G, B);
+
+}
+
 void parseGroup(XMLElement *element, Group *group) {
     XMLElement *current = element;
 
     if (!(strcmp(element->Name(), "translate"))) {
-        printf("found translate\n");
         parseTranslation(element, group);
-        printf("out translate\n");
     }
 
         //...
     else if (!(strcmp(element->Name(), "rotate"))){
-        printf("found rotate\n");
         parseRotation(element, group);
-        printf("out rotate\n");
     }
 
     else if (!(strcmp(element->Name(), "scale"))){
-        printf("found scale\n");
         parseScale(element, group);
-        printf("out scale\n");
     }
 
     else if (!(strcmp(element->Name(), "models"))) {
-        printf("found models\n");
         parseModels(element, group);
-        printf("out\n");
-    } else if (!(strcmp(element->Name(), "group"))) {
-        printf("found group \n");
+    } 
+    else if (!(strcmp(element->Name(), "group"))) {
         Group *child = new Group();
 
         group->pushGroup(child);
@@ -133,12 +136,13 @@ void parseGroup(XMLElement *element, Group *group) {
 
         parseGroup(element, child);
     }
+    else if (!(strcmp(element->Name(), "colour"))) {
+        parseColour(element,group);
+    }
     current = current->NextSiblingElement();
     if (current) {
-        printf("vai a outro\n");
         parseGroup(current, group);
     }
-    printf("vai sair\n");
 
 }
 

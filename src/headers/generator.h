@@ -8,6 +8,7 @@
 #include <string.h>
 #include <iostream>
 #include <fstream>
+#include <ostream>
 #ifdef __APPLE__
 #define OS_Windows 0
 #include <glut.h>
