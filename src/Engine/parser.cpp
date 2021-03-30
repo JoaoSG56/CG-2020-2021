@@ -98,7 +98,7 @@ void parseScale(XMLElement *element, Group *group) {
 }
 
 void parseColour(XMLElement* element, Group* group) {
-    float R = 0, G = 0, B = 0;
+    float R = 1, G = 1, B = 1;
 
     element->QueryFloatAttribute("R", &R);
     element->QueryFloatAttribute("G", &G);
@@ -156,16 +156,6 @@ int readXML(string file, Group *group) {
         element = xmlDoc.FirstChildElement("scene")->FirstChildElement(); // <group>
 
         parseGroup(element, group);
-
-
-        vector<Figure *> fig = group->getFigures();
-        for (int j = 0; j < fig.size(); j++) {
-            printf("\n\n\n%d\n", j);
-            vector<Point *> vert = fig[j]->getVertexes();
-            for (int i = 0; i < vert.size(); i++) {
-                printf("%f %f %f\n", vert[i]->getX(), vert[i]->getY(), vert[i]->getZ());
-            }
-        }
 
         return 1;
     } else {

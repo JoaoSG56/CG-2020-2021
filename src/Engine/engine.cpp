@@ -110,9 +110,9 @@ void render(Group* group) {
     for (int i = 0; i < tranformations.size(); i++)
         tranformations[i]->execute();
    // float R = 1, G = 1, B = 1;
-    float R = group->getR();
-    float G = group->getG();
-    float B = group->getB();
+    float R = group->getR()/255;
+    float G = group->getG()/255;
+    float B = group->getB()/255;
     vector<Figure*> figures = group->getFigures();
     for(int i = 0; i< figures.size();i++)
         figures[i]->draw(mode,R,G,B);
