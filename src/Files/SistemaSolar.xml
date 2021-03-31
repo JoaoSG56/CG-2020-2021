@@ -195,7 +195,7 @@
 				<scale X='1.5' Y='1.5' />
 				<colour R='180' G='180' B='160' />
 				<models>
-					<model file='orbit.3d' />
+					<model file='ring.3d' />
 				</models>
 			</group>
 		</group>
