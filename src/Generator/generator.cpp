@@ -314,6 +314,10 @@ void menu() {
     cout << "|                                                                |" << endl;
     cout << "| - cone [RADIUS] [HEIGHT] [SLICES] [STACKS]                     |" << endl;
     cout << "|    Cria um cone com o raio, altura, slices e stacks dadas.     |" << endl;
+    cout << "|                                                                |" << endl;
+    cout << "| - torus [EXTERNAL RADIUS] [INTERNAL RADIUS] [SLICES] [STACKS]  |" << endl;
+    cout << "|    Cria um torus no plano XOY, centrado na origem.             |" << endl;
+    cout << "|                                                                |" << endl;
     cout << "|----------------------------------------------------------------|" << endl;
     cout << "|   OUTPUT FILE:                                                 |" << endl;
     cout << "|    Ouput File tem de ser do formato 'Nome.3d'                  |" << endl;
