@@ -248,35 +248,48 @@ void createMenu(){
 
 
 void menu() {
-    cout << "#--------** MENU **---------#" << endl;
-    cout << "|    Modo de utilização:    |" << endl;
-    cout << "|    ./engine {file.xml}    |" << endl;
-    cout << "|---------------------------|" << endl;
-    cout << "|          Teclas:          |" << endl;
-    cout << "|   Mover câmera: W A S D   |" << endl;
-    cout << "|  Zoom in : Up_arrow_key   |" << endl;
-    cout << "| Zoom out : Down_arrow_key |" << endl;
-    cout << "|     ativar GL_Point : P   |" << endl;
-    cout << "|     ativar GL_Line : L    |" << endl;
-    cout << "|     ativar GL_Fill : F    |" << endl;
-    cout << "|---------------------------|" << endl;
-    cout << "|  nota: .xml tem de estar  |" << endl;
-    cout << "|   na pasta \"/src/Files/\"  |" << endl;
-    cout << "#---------------------------#" << endl;
+    cout << "#-------------** MENU **--------------#" << endl;
+    cout << "|         Modo de utilização:         |" << endl;
+    cout << "|         ./engine {file.xml}         |" << endl;
+    cout << "|-------------------------------------|" << endl;
+    cout << "|               Teclas:               |" << endl;
+    cout << "|-------------------------------------|" << endl;
+    cout << "|         Mudar Entre Câmeras:        |" << endl;
+    cout << "|          Right Mouse Button         |" << endl;
+    cout << "|-------------------------------------|" << endl;
+    cout << "|           Modo Estático:            |" << endl;
+    cout << "|      Mover câmera: W A S D UA DA    |" << endl;
+    cout << "|-------------------------------------|" << endl;
+    cout << "|         Modo First Person:          |" << endl;
+    cout << "|  Mover câmera: Mouse + UA DA LA RA  |" << endl;
+    cout << "|-------------------------------------|" << endl;
+    cout << "|       Zoom in : Up_arrow_key        |" << endl;
+    cout << "|      Zoom out : Down_arrow_key      |" << endl;
+    cout << "|          ativar GL_Point : P        |" << endl;
+    cout << "|          ativar GL_Line : L         |" << endl;
+    cout << "|          ativar GL_Fill : F         |" << endl;
+    cout << "|-------------------------------------|" << endl;
+    cout << "|       nota: .xml tem de estar       |" << endl;
+    cout << "|        na pasta \"/src/Files/\"       |" << endl;
+    cout << "|        nota2: UA -> Up Arrow        |" << endl;
+    cout << "|       nota2': DA -> Down Arrow      |" << endl;
+    cout << "|      nota2'': LA -> Left Arrow      |" << endl;
+    cout << "|     nota2''': RA -> Right Arrow     |" << endl;
+    cout << "#-------------------------------------#" << endl;
 
 }
 
 int main(int argc, char **argv) {
 
     if (argc != 2 || !regex_match(argv[1], regex("([a-zA-Z0-9\-_])+\.xml"))) {
-        cout << "Argumentos inválidos" << endl;
         menu();
+        cout << "Argumentos inválidos" << endl;
         //exit(0);
         return 0;
     }
     if (!readXML(argv[1], scene)) {
-        cout << "Ficheiro Inválido ou Mal escrito\nCertificar que o ficheiro se encontra em /src/Files/" << endl;
         menu();
+        cout << "Ficheiro Inválido ou Mal escrito\nCertificar que o ficheiro se encontra em /src/Files/" << endl;
         //exit(0);
         return 0;
     }
