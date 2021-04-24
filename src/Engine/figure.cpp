@@ -2,29 +2,33 @@
 
 using std::vector;
 
-void Figure::pushVertex(Point *v) {
-    vertexes.push_back(v);
-}
+Figure::Figure()= default;
 
-int Figure::getSize() {
-    return vertexes.size();
-}
+void Figure::setUp(std::vector<Point*> vertexes){
+    buffer_size = vertexes.size();
 
-vector<Point *> Figure::getVertexes() {
-    return vertexes;
-}
+    float* arr_vert = (float*) malloc(sizeof(float) * buffer_size * 3);
 
-void Figure::draw(GLenum mode, float R, float G, float B) {
-    glPolygonMode(GL_FRONT_AND_BACK, mode);
-
-    vector<Point *> v = getVertexes();
-
-    glBegin(GL_TRIANGLES);
-    glColor3f(R, G, B);
-    for (int i = 0; i < getSize(); i++) {
-        glVertex3f(v[i]->getX(), v[i]->getY(), v[i]->getZ());
+    int j = 0, i=0;
+    for(;j < buffer_size;j++){
+        arr_vert[i] = vertexes[j]->getX();
+        arr_vert[i+1] = vertexes[j]->getY();
+        arr_vert[i+2] = vertexes[j]->getZ();
+        i+=3;
     }
 
-    glEnd();
+    glGenBuffers(1,buffers);
+    glBindBuffer(GL_ARRAY_BUFFER,buffers[0]);
+    glBufferData(GL_ARRAY_BUFFER,sizeof(float) * buffer_size * 3, arr_vert, GL_STATIC_DRAW);
+
+    //free(arr_vert);
+}
+
+void Figure::draw(GLenum mode) {
+    glPolygonMode(GL_FRONT_AND_BACK, mode);
+
+    glBindBuffer(GL_ARRAY_BUFFER,buffers[0]);
+    glVertexPointer(3,GL_FLOAT,0,0);
+    glDrawArrays(GL_TRIANGLES,0,buffer_size*3);
 
 }

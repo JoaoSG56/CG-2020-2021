@@ -1,6 +1,6 @@
 
 #ifdef __APPLE__
-
+#define GL_SILENCE_DEPRECATION
 #include <GLUT/glut.h>
 
 #else
@@ -26,14 +26,8 @@
 using namespace tinyxml2;
 using namespace std;
 
-bool firstMouse = true;
 
-float alpha = 0;
-float beta = 0;
-float raioCamera = 8;
 GLenum mode = GL_LINE;
-float lastX;
-float lastY;
 
 int window;
 int menu_id;
@@ -113,9 +107,12 @@ void render(Group* group) {
     float R = group->getR()/255;
     float G = group->getG()/255;
     float B = group->getB()/255;
+
+    glColor3f(R,G,B);
     vector<Figure*> figures = group->getFigures();
     for(int i = 0; i< figures.size();i++)
-        figures[i]->draw(mode,R,G,B);
+        figures[i]->draw(mode);
+
 
     vector<Group*> children = group->getChilds();
     for(int i = 0; i< children.size();i++)
@@ -281,6 +278,15 @@ void menu() {
 
 int main(int argc, char **argv) {
 
+    // init GLUT and the window
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
+    glutInitWindowPosition(100, 100);
+    glutInitWindowSize(800, 800);
+    window = glutCreateWindow("CG@2020-2021");
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+
     if (argc != 2 || !regex_match(argv[1], regex("([a-zA-Z0-9\-_])+\.xml"))) {
         menu();
         cout << "Argumentos inválidos" << endl;
@@ -293,15 +299,6 @@ int main(int argc, char **argv) {
         //exit(0);
         return 0;
     }
-
-
-// init GLUT and the window
-    glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-    glutInitWindowPosition(100, 100);
-    glutInitWindowSize(800, 800);
-    window = glutCreateWindow("CG@2020-2021");
-
 
 
 // Required callback registry

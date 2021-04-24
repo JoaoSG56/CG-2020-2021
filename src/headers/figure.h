@@ -11,13 +11,13 @@
 
 class Figure{
     private:
-        std::vector<Point*> vertexes;
+        int buffer_size;
+        GLuint buffers[1];
 
     public:
-        void pushVertex(Point* v);
-        int getSize();
-        std::vector<Point*> getVertexes();
-        void draw(GLenum , float ,float,float);
+        Figure();
+        void setUp(std::vector<Point*> vertexes);
+        void draw(GLenum);
 };
 
 #endif //GENERATOR_FIGURES_H

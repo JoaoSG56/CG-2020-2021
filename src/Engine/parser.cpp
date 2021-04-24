@@ -10,6 +10,9 @@ std::string figures3dPath = "../src/Files/"; // for now
 int readfile(string ficheiro, Figure *f) {
     string delimiter = " ";
     ifstream inputFileStream(ficheiro);
+
+    vector<Point*> points_list;
+
     if (!inputFileStream.is_open()) {
         cout << "Ficheiro '" + ficheiro + "' não encontrado" << endl;
         return 0;
@@ -29,9 +32,13 @@ int readfile(string ficheiro, Figure *f) {
         getline(lineStream, c, ' ');
 
         Point *v = new Point(atof(a.c_str()), atof(b.c_str()), atof(c.c_str()));
-        f->pushVertex(v);
+        points_list.push_back(v);
 
     }
+
+    f->setUp(points_list);
+
+    inputFileStream.close();
     return 1;
 }
 
