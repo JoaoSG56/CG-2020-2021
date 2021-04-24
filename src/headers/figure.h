@@ -11,7 +11,7 @@
 
 class Figure{
     private:
-        int buffer_size;
+        float buffer_size;
         GLuint buffers[1];
 
     public:
