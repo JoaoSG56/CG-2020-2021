@@ -1,5 +1,5 @@
-#include <regex>
 #include "../headers/generator.h"
+#define GL_SILENCE_DEPRECATION
 
 void torus(float distance, float radius, int slices , int stacks, string nome) {
     ofstream file(PATH + nome);
@@ -403,6 +403,9 @@ int main(int argc, char *argv[]) {
         slices = atoi(argv[4]);
         stacks = atoi(argv[5]);
         cone(radius, height, slices, stacks, name);
+    } else if (argc == 3 && strcmp(argv[1],"patch") == 0){
+        bezierParser(argv[2]);
+
     } else {
         cout << "Argumentos insuficientes/inválidos" << endl;
         cout << "Para ajuda corra './generator'" << endl;

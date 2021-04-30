@@ -4,10 +4,13 @@
 
 #ifdef __APPLE__
 #include <GLUT/glut.h>
+
 #else
 #include <stdlib.h>
 #include <GL/glut.h>
 #endif
+#include <vector>
+#include "point.h"
 
 class Transform{
     float x_value;
@@ -25,9 +28,16 @@ class Transform{
 };
 
 class Translation : public Transform{
+    float time;
+    std::vector<Point*> c_p;
+    std::vector<Point*> cat_p;
+
 public:
-    Translation();
-    Translation(float x, float y, float z);
+    Translation(float x, float y, float z, float t);
+    void constructCurve();
+    int getCatSize();
+    void insertPoint(Point*);
+    void drawCurve();
     void execute();
 };
 

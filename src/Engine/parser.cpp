@@ -62,12 +62,30 @@ void parseTranslation(XMLElement *element, Group *group) {
     float x = 0;
     float y = 0;
     float z = 0;
+    float time = 0;
 
+    element->QueryFloatAttribute("time",&time);
     element->QueryFloatAttribute("X",&x);
     element->QueryFloatAttribute("Y",&y);
     element->QueryFloatAttribute("Z",&z);
 
-    Translation* t = new Translation(x,y,z);
+    Translation* t = new Translation(x,y,z,time);
+
+
+    for(XMLElement* points = element->FirstChildElement();points;points = points->NextSiblingElement()){
+        float px=0,py=0,pz=0;
+
+        points->QueryFloatAttribute("X",&x);
+        points->QueryFloatAttribute("Y",&y);
+        points->QueryFloatAttribute("Z",&z);
+
+        t->insertPoint(new Point(px,py,pz));
+    }
+    if(t->getCatSize()>0){
+        t->constructCurve();
+        // adicionar à orbita??
+    }
+
     group->pushTransform(t);
 
 }

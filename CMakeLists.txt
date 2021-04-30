@@ -58,7 +58,7 @@ endif(WIN32)
 # Project Name
 PROJECT(generator)
 
-set(GENERATOR_FILES src/Generator/generator.cpp src/headers/generator.h src/Engine/tinyxml2.cpp src/headers/tinyxml2.h src/headers/figure.h)
+set(GENERATOR_FILES src/Generator/generator.cpp src/headers/generator.h src/Engine/tinyxml2.cpp src/headers/tinyxml2.h src/headers/figure.h src/Generator/bezier.cpp src/headers/bezier.h)
 
 add_executable(generator ${GENERATOR_FILES})
 

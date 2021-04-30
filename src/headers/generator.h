@@ -17,6 +17,8 @@
 #include <GL/glut.h>
 #endif
 #include "tinyxml2.h"
+#include <regex>
+#include "bezier.h"
 
 #define PATH "../src/Files/"
 
