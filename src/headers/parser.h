@@ -11,6 +11,6 @@
 #include "group.h"
 
 
-int readXML(string file, Group* group);
+int readXML(string file, Group* group, vector<Translation*>* orbits);
 
 #endif //GENERATOR_PARSER_H

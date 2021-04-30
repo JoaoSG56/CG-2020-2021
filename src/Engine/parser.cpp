@@ -58,7 +58,7 @@ void parseModels(XMLElement *element, Group *group) {
 
 }
 
-void parseTranslation(XMLElement *element, Group *group) {
+void parseTranslation(XMLElement *element, Group *group, vector<Translation*>* orbits) {
     float x = 0;
     float y = 0;
     float z = 0;
@@ -69,20 +69,23 @@ void parseTranslation(XMLElement *element, Group *group) {
     element->QueryFloatAttribute("Y",&y);
     element->QueryFloatAttribute("Z",&z);
 
+
     Translation* t = new Translation(x,y,z,time);
 
 
     for(XMLElement* points = element->FirstChildElement();points;points = points->NextSiblingElement()){
         float px=0,py=0,pz=0;
 
-        points->QueryFloatAttribute("X",&x);
-        points->QueryFloatAttribute("Y",&y);
-        points->QueryFloatAttribute("Z",&z);
+        points->QueryFloatAttribute("X",&px);
+        points->QueryFloatAttribute("Y",&py);
+        points->QueryFloatAttribute("Z",&pz);
+
 
         t->insertPoint(new Point(px,py,pz));
     }
     if(t->getCatSize()>0){
         t->constructCurve();
+        orbits->push_back(t);
         // adicionar à orbita??
     }
 
@@ -96,15 +99,16 @@ void parseRotation(XMLElement *element, Group *group) {
     float z = 0;
 
     float angle = 0;
+    float time = 0;
 
     element->QueryFloatAttribute("axisX",&x);
     element->QueryFloatAttribute("axisY",&y);
     element->QueryFloatAttribute("axisZ",&z);
 
+    element->QueryFloatAttribute("time",&time);
     element->QueryFloatAttribute("angle",&angle);
 
-    Rotation* r = new Rotation(angle,x,y,z);
-    group->pushTransform(r);
+    group->pushTransform(new Rotation(angle,x,y,z,time));
 
 }
 
@@ -117,8 +121,7 @@ void parseScale(XMLElement *element, Group *group) {
     element->QueryFloatAttribute("Y",&y);
     element->QueryFloatAttribute("Z",&z);
 
-    Scale* s = new Scale(x,y,z);
-    group->pushTransform(s);
+    group->pushTransform(new Scale(x,y,z));
 
 }
 
@@ -133,11 +136,11 @@ void parseColour(XMLElement* element, Group* group) {
 
 }
 
-void parseGroup(XMLElement *element, Group *group) {
+void parseGroup(XMLElement *element, Group *group, vector<Translation*>* orbits) {
     XMLElement *current = element;
 
     if (!(strcmp(element->Name(), "translate"))) {
-        parseTranslation(element, group);
+        parseTranslation(element, group,orbits);
     }
 
         //...
@@ -159,20 +162,20 @@ void parseGroup(XMLElement *element, Group *group) {
 
         element = element->FirstChildElement();
 
-        parseGroup(element, child);
+        parseGroup(element, child,orbits);
     }
     else if (!(strcmp(element->Name(), "colour"))) {
         parseColour(element,group);
     }
     current = current->NextSiblingElement();
     if (current) {
-        parseGroup(current, group);
+        parseGroup(current, group,orbits);
     }
 
 }
 
 
-int readXML(string file, Group *group) {
+int readXML(string file, Group *group, vector<Translation*>* orbits) {
 
     XMLDocument xmlDoc;
     XMLElement *element;
@@ -180,7 +183,7 @@ int readXML(string file, Group *group) {
     if (!(xmlDoc.LoadFile((XMLPath + file).c_str()))) {
         element = xmlDoc.FirstChildElement("scene")->FirstChildElement(); // <group>
 
-        parseGroup(element, group);
+        parseGroup(element, group, orbits);
 
         return 1;
     } else {

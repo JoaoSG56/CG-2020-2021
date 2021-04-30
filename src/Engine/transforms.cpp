@@ -130,12 +130,20 @@ void Translation::execute() {
 
 
 /* Rotation */
-Rotation::Rotation(float a, float x, float y, float z) : Transform(x, y, z) {
+Rotation::Rotation(float a, float x, float y, float z, float t) : Transform(x, y, z) {
     angle = a;
+    time = t;
 }
 
 void Rotation::execute() {
-    glRotatef(angle, getX(), getY(), getZ());
+    float ang = angle;
+
+    if(time>0){
+        float elapsed = glutGet(GLUT_ELAPSED_TIME) % (int) (time*1000);
+        ang = (elapsed * 360) / (time*1000);
+    }
+
+    glRotatef(ang, getX(), getY(), getZ());
 }
 
 

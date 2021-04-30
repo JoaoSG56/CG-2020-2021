@@ -33,6 +33,8 @@ int window;
 int menu_id;
 bool fps_cam = true;
 
+vector<Translation*> orbits;
+
 int timebase = 0, frame = 0;
 
 Camera* camera = new Camera();
@@ -144,6 +146,9 @@ void renderScene(void) {
 
     render(scene);
 
+    for(int i =0;i<orbits.size();i++)
+        orbits[i]->drawCurve();
+
     displayFPS();
 
     // End of frame
@@ -206,9 +211,7 @@ void moveMouse(int x, int y ){
 
     float dx = x - centerX;
     float dy = y - centerY;
-
-
-
+    
     camera->turn(dx,dy);
 
     glutWarpPointer(centerX,centerY);
@@ -293,7 +296,7 @@ int main(int argc, char **argv) {
         //exit(0);
         return 0;
     }
-    if (!readXML(argv[1], scene)) {
+    if (!readXML(argv[1], scene,&orbits)) {
         menu();
         cout << "Ficheiro Inválido ou Mal escrito\nCertificar que o ficheiro se encontra em /src/Files/" << endl;
         //exit(0);

@@ -43,9 +43,9 @@ public:
 
 class Rotation : public Transform{
     float angle;
+    float time;
 public:
-    Rotation();
-    Rotation(float a, float x, float y, float z);
+    Rotation(float a, float x, float y, float z, float t);
     void execute();
 };
 
