@@ -318,6 +318,9 @@ void menu() {
     cout << "| - torus [EXTERNAL RADIUS] [INTERNAL RADIUS] [SLICES] [STACKS]  |" << endl;
     cout << "|    Cria um torus no plano XOY, centrado na origem.             |" << endl;
     cout << "|                                                                |" << endl;
+    cout << "| - patch [TESSELATION LEVEL] [INPUT FILE]                       |" << endl;
+    cout << "|    Cria um tipo novo de figura com base nos patches de Bezier. |" << endl;
+    cout << "|                                                                |" << endl;
     cout << "|----------------------------------------------------------------|" << endl;
     cout << "|   OUTPUT FILE:                                                 |" << endl;
     cout << "|    Ouput File tem de ser do formato 'Nome.3d'                  |" << endl;

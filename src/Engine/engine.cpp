@@ -272,6 +272,7 @@ void menu() {
     cout << "|          ativar GL_Point : P        |" << endl;
     cout << "|          ativar GL_Line : L         |" << endl;
     cout << "|          ativar GL_Fill : F         |" << endl;
+    cout << "|      Ativar/Desativar Órbitas: O    |" << endl;
     cout << "|-------------------------------------|" << endl;
     cout << "|       nota: .xml tem de estar       |" << endl;
     cout << "|        na pasta \"/src/Files/\"       |" << endl;
