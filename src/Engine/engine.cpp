@@ -31,14 +31,16 @@ GLenum mode = GL_LINE;
 
 int window;
 int menu_id;
-bool fps_cam = true;
+bool fps_cam = false;
+int camOption = 0; // 0 - static, 1 - fps
 bool show_orbits = true;
 
 vector<Translation*> orbits;
 
 int timebase = 0, frame = 0;
 
-Camera* camera = new Camera();
+CameraFPS* camera = new CameraFPS();
+Camera* cameras[2];
 
 Group *scene = new Group();
 
@@ -131,18 +133,21 @@ void renderScene(void) {
 
     // set the camera
     glLoadIdentity();
-    if(fps_cam) {
-        Point *focus = camera->getFocus();
-        gluLookAt(camera->getPosition()->getX(), camera->getPosition()->getY(), camera->getPosition()->getZ(),
+    //if(fps_cam) {
+        Point *focus = cameras[camOption]->getFocus();
+        Point* position = cameras[camOption]->getPosition();
+        gluLookAt(position->getX(), position->getY(), position->getZ(),
                   focus->getX(), focus->getY(), focus->getZ(),
                   0.0f, 1.0f, 0.0f);
-    }
+    //}
+    /*
     else{
         Point *pos = camera->getStaticPosition();
         gluLookAt(pos->getX(), pos->getY(), pos->getZ(),
                   0,0,0,
                   0,1,0);
     }
+     */
     eixos();
 
     render(scene);
@@ -157,28 +162,28 @@ void renderScene(void) {
 }
 
 void keyboardspecial(int key_code, int x, int y) {
-    switch (key_code) {
-/*
-        case GLUT_KEY_UP:
-            raioCamera -= 1;
-            break;
-        case GLUT_KEY_DOWN:
-            raioCamera += 1;
-            break;
-*/
-        case GLUT_KEY_UP:
-            camera->moveFoward();
-            break;
-        case GLUT_KEY_DOWN:
-            camera->moveBackwards();
-            break;
-        case GLUT_KEY_LEFT:
-            camera->moveLeft();
-            break;
-        case GLUT_KEY_RIGHT:
-            camera->moveRight();
-            break;
-    }
+    /*   switch (key_code) {
+           case GLUT_KEY_UP:
+               raioCamera -= 1;
+               break;
+           case GLUT_KEY_DOWN:
+               raioCamera += 1;
+               break;
+
+           case GLUT_KEY_UP:
+               camera->moveFoward();
+               break;
+           case GLUT_KEY_DOWN:
+               camera->moveBackwards();
+               break;
+           case GLUT_KEY_LEFT:
+               camera->moveLeft();
+               break;
+           case GLUT_KEY_RIGHT:
+               camera->moveRight();
+               break;
+       }*/
+    cameras[camOption]->specialKey(key_code);
     glutPostRedisplay();
 }
 
@@ -201,7 +206,7 @@ void keyboardfunc(unsigned char key, int x, int y) {
             glutDestroyWindow(window);
             exit(0);
         default:
-            camera->turnStatic(key);
+            cameras[camOption]->move(key);
             break;
     }
     glutPostRedisplay();
@@ -216,7 +221,7 @@ void moveMouse(int x, int y ){
     float dx = x - centerX;
     float dy = y - centerY;
 
-    camera->turn(dx,dy);
+    cameras[camOption]->turn(dx,dy);
 
     glutWarpPointer(centerX,centerY);
     glutPostRedisplay();
@@ -232,9 +237,11 @@ void menuChoice(int num){
     switch (num) {
         case 1:
             fps_cam = true;
+            camOption = 1;
             break;
         case 0:
             fps_cam = false;
+            camOption = 0;
             break;
         case -1:
             glutDestroyWindow(window);
@@ -294,7 +301,8 @@ int main(int argc, char **argv) {
     window = glutCreateWindow("CG@2020-2021");
 
     glEnableClientState(GL_VERTEX_ARRAY);
-
+    cameras[0] = new CameraStatic();
+    cameras[1] = new CameraFPS();
     if (argc != 2 || !regex_match(argv[1], regex("([a-zA-Z0-9\-_])+\.xml"))) {
         menu();
         cout << "Argumentos inválidos" << endl;
@@ -309,6 +317,7 @@ int main(int argc, char **argv) {
     }
 
 
+
 // Required callback registry
     glutDisplayFunc(renderScene);
     glutIdleFunc(renderScene);
@@ -319,6 +328,7 @@ int main(int argc, char **argv) {
     glutKeyboardFunc(keyboardfunc);
     glutSpecialFunc(keyboardspecial);
     glutPassiveMotionFunc(moveMouse);
+
 
 //  OpenGL settings
     glEnable(GL_DEPTH_TEST);
