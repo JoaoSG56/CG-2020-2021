@@ -119,14 +119,14 @@ void getCatmullRomPoint(float t, int* indices, float* p, float* deriv, std::vect
     // T*M*P
     p[0] = res[0] * p0->getX() + res[1] * p1->getX() + res[2] * p2->getX() + res[3] * p3->getX();
     p[1] = res[0] * p0->getY() + res[1] * p1->getY() + res[2] * p2->getY() + res[3] * p3->getY();
-    p[2] = res[0] * p0->getY() + res[1] * p1->getZ() + res[2] * p2->getZ() + res[3] * p3->getZ();
+    p[2] = res[0] * p0->getZ() + res[1] * p1->getZ() + res[2] * p2->getZ() + res[3] * p3->getZ();
 
 
     deriv[0] = deriv_aux[0] * p0->getX() + deriv_aux[1] * p1->getX() + deriv_aux[2] * p2->getX() +
                deriv_aux[3] * p3->getX();
     deriv[1] = deriv_aux[0] * p0->getY() + deriv_aux[1] * p1->getY() + deriv_aux[2] * p2->getY() +
                deriv_aux[3] * p3->getY();
-    deriv[2] = deriv_aux[0] * p0->getY() + deriv_aux[1] * p1->getZ() + deriv_aux[2] * p2->getZ() +
+    deriv[2] = deriv_aux[0] * p0->getZ() + deriv_aux[1] * p1->getZ() + deriv_aux[2] * p2->getZ() +
                deriv_aux[3] * p3->getZ();
 
 }
@@ -151,7 +151,6 @@ void getGlobalCatmullRomPoints(float gt, float* p, float* deriv, std::vector<Poi
 void Translation::constructCurve() {
     float p[3];
     float deriv[3];
-
     for (int t = 0; t < 100; t++) {
         getGlobalCatmullRomPoints((float) t / 100, p, deriv, catmull_points);
         curve_points.push_back(new Point(p[0], p[1], p[2]));

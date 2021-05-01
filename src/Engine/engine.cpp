@@ -32,6 +32,7 @@ GLenum mode = GL_LINE;
 int window;
 int menu_id;
 bool fps_cam = true;
+bool show_orbits = true;
 
 vector<Translation*> orbits;
 
@@ -145,9 +146,9 @@ void renderScene(void) {
     eixos();
 
     render(scene);
-
-    for(int i =0;i<orbits.size();i++)
-        orbits[i]->drawCurve();
+    if(show_orbits)
+        for(int i =0;i<orbits.size();i++)
+            orbits[i]->drawCurve();
 
     displayFPS();
 
@@ -193,6 +194,9 @@ void keyboardfunc(unsigned char key, int x, int y) {
         case 'f':
             mode = GL_FILL;
             break;
+        case 'o':
+            show_orbits = !show_orbits;
+            break;
         case ESCAPE:
             glutDestroyWindow(window);
             exit(0);
@@ -211,7 +215,7 @@ void moveMouse(int x, int y ){
 
     float dx = x - centerX;
     float dy = y - centerY;
-    
+
     camera->turn(dx,dy);
 
     glutWarpPointer(centerX,centerY);
