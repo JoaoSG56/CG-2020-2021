@@ -103,15 +103,6 @@ void getCatmullRomPoint(float t, int* indices, float* p, float* deriv, std::vect
     float deriv_aux[4];
 
 
-    // T * M
-    /*
-    res[0] = tt[0] * m[0][0] + tt[1] * m[1][0] + tt[2] * m[2][0] + tt[3] * m [3][0];
-    res[1] = tt[0] * m[0][1] + tt[1] * m[1][1] + tt[2] * m[2][1] + tt[3] * m [3][1];
-    res[2] = tt[0] * m[0][2] + tt[1] * m[1][2] + tt[2] * m[2][2] + tt[3] * m [3][2];
-    res[3] = tt[0] * m[0][3] + tt[1] * m[1][3] + tt[2] * m[2][3] + tt[3] * m [3][3];
-    printf("%f %f %f %f\n",res[0],res[1],res[2],res[3]);
-    */
-
     multMatrixVector((float*) m, tt, res);
 
     multMatrixVector((float*) m, dtt, deriv_aux);

@@ -33,7 +33,6 @@ GLenum mode = GL_LINE;
 
 int window;
 int menu_id;
-bool fps_cam = false;
 int camOption = 0; // 0 - static, 1 - fps
 bool show_orbits = true;
 
@@ -136,21 +135,13 @@ void renderScene(void) {
 
     // set the camera
     glLoadIdentity();
-    //if(fps_cam) {
-        Point *focus = cameras[camOption]->getFocus();
-        Point* position = cameras[camOption]->getPosition();
-        gluLookAt(position->getX(), position->getY(), position->getZ(),
-                  focus->getX(), focus->getY(), focus->getZ(),
-                  0.0f, 1.0f, 0.0f);
-    //}
-    /*
-    else{
-        Point *pos = camera->getStaticPosition();
-        gluLookAt(pos->getX(), pos->getY(), pos->getZ(),
-                  0,0,0,
-                  0,1,0);
-    }
-     */
+
+    Point *focus = cameras[camOption]->getFocus();
+    Point* position = cameras[camOption]->getPosition();
+    gluLookAt(position->getX(), position->getY(), position->getZ(),
+        focus->getX(), focus->getY(), focus->getZ(),
+        0.0f, 1.0f, 0.0f);
+
     eixos();
 
     render(scene);
@@ -212,7 +203,7 @@ void keyboardfunc(unsigned char key, int x, int y) {
     glutPostRedisplay();
 }
 void moveMouse(int x, int y ){
-    if(!fps_cam) return;
+    if(camOption!=1) return;
 
 
     float centerX = glutGet(GLUT_WINDOW_WIDTH)/2;
@@ -236,11 +227,9 @@ void returnError(string error) {
 void menuChoice(int num){
     switch (num) {
         case 1:
-            fps_cam = true;
             camOption = 1;
             break;
         case 0:
-            fps_cam = false;
             camOption = 0;
             break;
         case -1:
