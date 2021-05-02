@@ -1,14 +1,6 @@
 
 #ifndef GENERATOR_TRANSFORMS_H
 #define GENERATOR_TRANSFORMS_H
-
-#ifdef __APPLE__
-#include <GLUT/glut.h>
-
-#else
-#include <stdlib.h>
-#include <GL/glut.h>
-#endif
 #include <vector>
 #include "point.h"
 

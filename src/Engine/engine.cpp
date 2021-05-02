@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include"../headers/figure.h"
+#include "../headers/group.h"
 #ifdef __APPLE__
 #define GL_SILENCE_DEPRECATION
 #include <GLUT/glut.h>
@@ -19,7 +20,6 @@
 #include <iostream>
 #include "../headers/point.h"
 #include <regex>
-#include "../headers/group.h"
 #include "../headers/parser.h"
 #include "../headers/camera.h"
 
