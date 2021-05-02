@@ -3,11 +3,8 @@
 
 #include <vector>
 #include "point.h"
-#ifdef __APPLE__
-#include <GLUT/glut.h>
-#else
+#ifndef __APPLE__
 #include <GL/glew.h>
-#include <GL/glut.h>
 #endif
 
 class Figure{
@@ -18,7 +15,7 @@ class Figure{
     public:
         Figure();
         void setUp(std::vector<Point*> vertexes);
-        void draw(GLenum);
+        void draw();
 };
 
 #endif //GENERATOR_FIGURES_H

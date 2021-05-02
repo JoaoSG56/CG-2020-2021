@@ -3,8 +3,9 @@
 #define GENERATOR_GROUP_H
 
 #include <vector>
-#include "transforms.h"
 #include "figure.h"
+#include "transforms.h"
+
 
 class Group {
     std::vector<Transform*> transforms;

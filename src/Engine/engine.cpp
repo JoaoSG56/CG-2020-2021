@@ -1,10 +1,10 @@
-
+#include <stdlib.h>
+#include"../headers/figure.h"
 #ifdef __APPLE__
 #define GL_SILENCE_DEPRECATION
 #include <GLUT/glut.h>
 
 #else
-#include <stdlib.h>
 #include <GL/glew.h>
 #include <GL/glut.h>
 #define OS_Windows 1
@@ -116,9 +116,10 @@ void render(Group* group) {
     float B = group->getB()/255;
 
     glColor3f(R,G,B);
+    glPolygonMode(GL_FRONT_AND_BACK, mode);
     vector<Figure*> figures = group->getFigures();
     for(int i = 0; i< figures.size();i++)
-        figures[i]->draw(mode);
+        figures[i]->draw();
 
 
     vector<Group*> children = group->getChilds();
@@ -302,8 +303,9 @@ int main(int argc, char **argv) {
     glutInitWindowSize(800, 800);
     window = glutCreateWindow("CG@2020-2021");
 
-
+#ifndef __APPLE__
     glewInit();
+#endif
 
 
     glEnableClientState(GL_VERTEX_ARRAY);

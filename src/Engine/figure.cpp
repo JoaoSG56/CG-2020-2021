@@ -24,8 +24,7 @@ void Figure::setUp(std::vector<Point*> vertexes){
     free(arr_vert);
 }
 
-void Figure::draw(GLenum mode) {
-    glPolygonMode(GL_FRONT_AND_BACK, mode);
+void Figure::draw() {
 
     glBindBuffer(GL_ARRAY_BUFFER,buffers[0]);
     glVertexPointer(3,GL_FLOAT,0,0);
