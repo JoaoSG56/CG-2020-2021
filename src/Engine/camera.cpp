@@ -8,7 +8,7 @@
 #endif
 
 Camera::Camera() {
-    position = new Point(10, 5, 10);
+    position = new Point(40, 20, 40);
     direction = new Point(0, 0, 0);
 
 }
@@ -147,7 +147,6 @@ void CameraStatic::move(unsigned char key) {
 }
 
 void CameraStatic::specialKey(int key_code) {
-    printf("entrou\n");
     Point* position = Camera::getPosition();
     float r = sqrt(pow(position->getX(), 2) + pow(position->getY(), 2) + pow(position->getZ(), 2));
     switch (key_code) {

@@ -24,6 +24,7 @@ class Translation : public Transform{
     float up[3];
     std::vector<Point*> curve_points;
     std::vector<Point*> catmull_points;
+   
 
 public:
     Translation(float x, float y, float z, float t);

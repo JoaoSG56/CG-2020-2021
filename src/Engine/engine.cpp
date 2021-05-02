@@ -154,10 +154,11 @@ void renderScene(void) {
     eixos();
 
     render(scene);
-    if(show_orbits)
-        for(int i =0;i<orbits.size();i++)
+    if (show_orbits) {
+        glColor3f(1, 1, 1);
+        for (int i = 0;i < orbits.size();i++)
             orbits[i]->drawCurve();
-
+    }
     displayFPS();
 
     // End of frame
@@ -165,27 +166,23 @@ void renderScene(void) {
 }
 
 void keyboardspecial(int key_code, int x, int y) {
-    /*   switch (key_code) {
-           case GLUT_KEY_UP:
-               raioCamera -= 1;
-               break;
-           case GLUT_KEY_DOWN:
-               raioCamera += 1;
-               break;
-
-           case GLUT_KEY_UP:
-               camera->moveFoward();
-               break;
-           case GLUT_KEY_DOWN:
-               camera->moveBackwards();
-               break;
+    /*
+       switch (key_code) {
+           
            case GLUT_KEY_LEFT:
-               camera->moveLeft();
+               for (int i = 0; i < orbits.size();i++) {
+                   orbits[i]->changeVelocity(1.25);
+               }
                break;
            case GLUT_KEY_RIGHT:
-               camera->moveRight();
+               for (int i = 0; i < orbits.size();i++) {
+                   orbits[i]->changeVelocity(0.75);
+               }
                break;
-       }*/
+           default:
+               cameras[camOption]->specialKey(key_code);
+       }
+       */
     cameras[camOption]->specialKey(key_code);
     glutPostRedisplay();
 }
@@ -275,10 +272,8 @@ void menu() {
     cout << "|      Mover câmera: W A S D UA DA    |" << endl;
     cout << "|-------------------------------------|" << endl;
     cout << "|         Modo First Person:          |" << endl;
-    cout << "|  Mover câmera: Mouse + UA DA LA RA  |" << endl;
+    cout << "|    Mover câmera: Mouse + W A S D    |" << endl;
     cout << "|-------------------------------------|" << endl;
-    cout << "|       Zoom in : Up_arrow_key        |" << endl;
-    cout << "|      Zoom out : Down_arrow_key      |" << endl;
     cout << "|          ativar GL_Point : P        |" << endl;
     cout << "|          ativar GL_Line : L         |" << endl;
     cout << "|          ativar GL_Fill : F         |" << endl;

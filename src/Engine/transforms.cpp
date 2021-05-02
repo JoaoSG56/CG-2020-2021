@@ -181,6 +181,8 @@ void Translation::drawCurve() {
     glEnd();
 }
 
+
+
 void Translation::execute() {
 
     float pos[3];
