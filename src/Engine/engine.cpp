@@ -5,7 +5,9 @@
 
 #else
 #include <stdlib.h>
+#include <GL/glew.h>
 #include <GL/glut.h>
+#define OS_Windows 1
 #endif
 
 #define _USE_MATH_DEFINES
@@ -245,7 +247,7 @@ void menuChoice(int num){
             break;
         case -1:
             glutDestroyWindow(window);
-            exit(0);
+            //exit(0);
     }
 }
 
@@ -299,6 +301,10 @@ int main(int argc, char **argv) {
     glutInitWindowPosition(100, 100);
     glutInitWindowSize(800, 800);
     window = glutCreateWindow("CG@2020-2021");
+
+
+    glewInit();
+
 
     glEnableClientState(GL_VERTEX_ARRAY);
     cameras[0] = new CameraStatic();
