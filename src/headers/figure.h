@@ -4,7 +4,9 @@
 #include <vector>
 #include "point.h"
 #ifndef __APPLE__
+
 #include <GL/glew.h>
+#include <GL/glut.h>
 #endif
 
 class Figure{
