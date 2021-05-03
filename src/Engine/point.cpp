@@ -34,3 +34,14 @@ void Point::setY(float b) {
 void Point::setZ(float c) {
     z = c;
 }
+
+Point* Point::getNormal(Point* p) {
+    float l, coordX, coordY, coordZ;
+
+    l = sqrt(p->x * p->x + p->y * p->y + p->z * p->z);
+    coordX = p->x / l;
+    coordY = p->y / l;
+    coordZ = p->z / l;
+
+    return new Point(coordX, coordY, coordZ);
+}

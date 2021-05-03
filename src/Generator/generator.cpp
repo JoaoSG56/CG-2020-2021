@@ -1,17 +1,64 @@
 #include "../headers/generator.h"
 #define GL_SILENCE_DEPRECATION
 
+void writeToFile(vector<Point*> vertexes, vector<Point*> normal, string name) {
+    ofstream file(PATH + name);
+    file << vertexes.size() << endl;
+    printf("[DEBUG] vertices size: %d\n", vertexes.size());
+    for (int i = 0; i < vertexes.size();i++) {
+        file << vertexes[i]->getX() << " " << vertexes[i]->getY() << " " << vertexes[i]->getZ() << endl;
+    }
+
+    printf("[DEBUG] normal size: %d\n", normal.size());
+    for (int i = 0; i < normal.size();i++) {
+        file << normal[i]->getX() << " " << normal[i]->getY() << " " << normal[i]->getZ() << endl;
+    }
+
+    file.close();
+}
+
+
 void torus(float distance, float radius, int slices , int stacks, string nome) {
-    ofstream file(PATH + nome);
+    //ofstream file(PATH + nome);
 
 
     float theta = 0;
     float phi = 0;
     float theta_shift = (2*M_PI)/slices;
     float phi_shift = (2*M_PI)/stacks;
-    file << slices*stacks*6 << endl;
+    vector<Point*> vertexes, normal;
+
+    //file << slices*stacks*6 << endl;
     for(int i = 0; i < slices; i++){
+        double a0 = i * theta_shift;
+        double a1 = a0 + theta_shift;
+
+        float x0 = cos(a0);
+        float y0 = sin(a0);
+        float x1 = cos(a1);
+        float y1 = sin(a1);
         for(int j = 0; j < stacks; j++){
+
+            vertexes.push_back(new Point(cos(theta) * (distance + radius * cos(phi)), sin(theta) * (distance + radius * cos(phi)), radius * sin(phi)));
+            vertexes.push_back(new Point(cos(theta + theta_shift) * (distance + radius * cos(phi)) , sin(theta + theta_shift) * (distance + radius * cos(phi)), radius * sin(phi)));
+            vertexes.push_back(new Point(cos(theta + theta_shift) * (distance + radius * cos(phi + phi_shift)) , sin(theta + theta_shift) * (distance + radius * cos(phi + phi_shift)) , radius * sin(phi + phi_shift)));
+
+            vertexes.push_back(new Point(cos(theta + theta_shift) * (distance + radius * cos(phi + phi_shift)) , sin(theta + theta_shift) * (distance + radius * cos(phi + phi_shift)) ,radius * sin(phi + phi_shift)));
+            vertexes.push_back(new Point(cos(theta) * (distance + radius * cos(phi + phi_shift)) ,sin(theta) * (distance + radius * cos(phi + phi_shift)) , radius * sin(phi + phi_shift)));
+            vertexes.push_back(new Point(cos(theta) * (distance + radius * cos(phi)) , sin(theta) * (distance + radius * cos(phi)), radius * sin(phi)));
+
+
+            normal.push_back(new Point(x0 * cos(j * phi_shift), y0 * cos(j * phi_shift), sin(j * phi_shift)));
+            normal.push_back(new Point(x1 * cos(j * phi_shift), y1 * cos(j * phi_shift), sin(j * phi_shift)));
+            normal.push_back(new Point(x0 * cos((j + 1) * phi_shift), y0 * cos((j + 1) * phi_shift), sin((j + 1) * phi_shift)));
+
+
+            normal.push_back(new Point(x0 * cos((j + 1) * phi_shift), y0 * cos((j + 1) * phi_shift), sin((j + 1) * phi_shift)));
+            normal.push_back(new Point(x1 * cos(j * phi_shift), y1 * cos(j * phi_shift), sin(j * phi_shift)));
+            normal.push_back(new Point(x1 * cos((j + 1) * phi_shift), y1 * cos((j + 1) * phi_shift), sin((j + 1) * phi_shift)));
+
+
+            /*
             file << cos(theta)*(distance + radius * cos(phi))<< " " << sin(theta)*(distance + radius * cos(phi)) << " " << radius*sin(phi) << endl;
             file << cos(theta + theta_shift)*(distance + radius * cos(phi))<< " " << sin(theta + theta_shift)*(distance + radius * cos(phi)) << " " << radius*sin(phi) << endl;
             file << cos(theta + theta_shift)*(distance + radius * cos(phi + phi_shift))<< " " << sin(theta+theta_shift)*(distance + radius * cos(phi+phi_shift)) << " " << radius*sin(phi+phi_shift) << endl;
@@ -21,21 +68,22 @@ void torus(float distance, float radius, int slices , int stacks, string nome) {
             file << cos(theta + theta_shift)*(distance + radius * cos(phi + phi_shift)) << " " << sin(theta+theta_shift)*(distance + radius * cos(phi+phi_shift)) << " " << radius*sin(phi+phi_shift) << endl;
             file << cos(theta)*(distance + radius * cos(phi + phi_shift)) << " " << sin(theta)*(distance + radius * cos(phi + phi_shift)) << " " <<radius*sin(phi + phi_shift) << endl;
             file << cos(theta)*(distance + radius * cos(phi)) << " " << sin(theta)*(distance + radius * cos(phi)) << " " << radius*sin(phi) << endl;
-
+            */
             phi = phi_shift * (j + 1);
         }
         theta = theta_shift * (i + 1);
     }
+    writeToFile(vertexes, normal, nome);
 //torus 5 3 20 20 torus.3d
 
 }
 
 
 void plane(int lado, string nome) {
-    ofstream file(PATH + nome);
+    //ofstream file(PATH + nome);
     float x, y, z;
     y = 0;
-
+    vector<Point*> vertexes, normal;
     if ((lado % 2) == 0) { // se for par
         x = (float) lado / 2;
         z = (float) lado / 2;
@@ -44,8 +92,43 @@ void plane(int lado, string nome) {
         z = (float) lado / 2 + 0.5;
     }
 
+    vertexes.push_back(new Point(-x,y,-z));
+    vertexes.push_back(new Point(-x,y,z));
+    vertexes.push_back(new Point(x,y,z));
+
+    vertexes.push_back(new Point(x,y,z));
+    vertexes.push_back(new Point(x,y,-z));
+    vertexes.push_back(new Point(-x,y,-z));
+
+    vertexes.push_back(new Point(-x,y,z));
+    vertexes.push_back(new Point(-x,y,-z));
+    vertexes.push_back(new Point(x,y,z));
+
+    vertexes.push_back(new Point(x,y,-z));
+    vertexes.push_back(new Point(x,y,z));
+    vertexes.push_back(new Point(-x,y,-z));
+
+
+    normal.push_back(new Point(0, 1, 0));
+    normal.push_back(new Point(0, 1, 0));
+    normal.push_back(new Point(0, 1, 0));
+
+    normal.push_back(new Point(0, 1, 0));
+    normal.push_back(new Point(0, 1, 0));
+    normal.push_back(new Point(0, 1, 0));
+
+    normal.push_back(new Point(0, -1, 0));
+    normal.push_back(new Point(0, -1, 0));
+    normal.push_back(new Point(0, -1, 0));
+
+    normal.push_back(new Point(0, -1, 0));
+    normal.push_back(new Point(0, -1, 0));
+    normal.push_back(new Point(0, -1, 0));
+
+    writeToFile(vertexes, normal, nome);
     //Vertices
     //printf("%d\n", 12);
+    /*
     file << 12 << endl;
     file << -x << " " << y << " " << -z << endl;
     file << -x << " " << y << " " << z << endl;
@@ -65,12 +148,12 @@ void plane(int lado, string nome) {
 
 
     file.close();
-
+*/
 }
 
 
 void box(float a, float b, float c, int optional, string nome) {
-    ofstream file(PATH + nome);
+    //ofstream file(PATH + nome);
     float x, y, z;
 
     x = a / 2;
@@ -82,15 +165,32 @@ void box(float a, float b, float c, int optional, string nome) {
     float moveX = a / divisoes;
     float moveY = b / divisoes;
     float moveZ = c / divisoes;
-
+    vector<Point*> vertexes, normal;
 
     //printf("%d\n", 36 * divisoes * divisoes);
-    file << 36 * divisoes * divisoes << endl;
+    //file << 36 * divisoes * divisoes << endl;
 
 
     for (int i = 0; i < divisoes; i++) {
         for (int j = 0; j < divisoes; j++) {
             // cima
+            vertexes.push_back(new Point(-x + (j * moveX) , y , -z + (i * moveZ)));
+            vertexes.push_back(new Point(-x + moveX + (j * moveX) , y , -z + moveZ + i * moveZ));
+            vertexes.push_back(new Point(-x + moveX + (j * moveX) , y , -z + i * moveZ));
+
+            normal.push_back(new Point(0, 1, 0));
+            normal.push_back(new Point(0, 1, 0));
+            normal.push_back(new Point(0, 1, 0));
+
+            vertexes.push_back(new Point(-x + (j * moveX) , y , -z + moveZ + i * moveZ));
+            vertexes.push_back(new Point(-x + moveX + (j * moveX) , y , -z + moveZ + i * moveZ));
+            vertexes.push_back(new Point(-x + (j * moveX) , y , -z + (i * moveZ)));
+
+            normal.push_back(new Point(0, 1, 0));
+            normal.push_back(new Point(0, 1, 0));
+            normal.push_back(new Point(0, 1, 0));
+
+            /*
             file << -x + (j * moveX) << " " << y << " " << -z + (i * moveZ) << endl;
             file << -x + moveX + (j * moveX) << " " << y << " " << -z + moveZ + i * moveZ << endl;
             file << -x + moveX + (j * moveX) << " " << y << " " << -z + i * moveZ << endl;
@@ -98,8 +198,25 @@ void box(float a, float b, float c, int optional, string nome) {
             file << -x + (j * moveX) << " " << y << " " << -z + moveZ + i * moveZ << endl;
             file << -x + moveX + (j * moveX) << " " << y << " " << -z + moveZ + i * moveZ << endl;
             file << -x + (j * moveX) << " " << y << " " << -z + (i * moveZ) << endl;
-
+*/
             // baixo
+            vertexes.push_back(new Point(-x + moveX + (j * moveX) , -y , -z + moveZ + i * moveZ));
+            vertexes.push_back(new Point(-x + (j * moveX) , -y , -z + (i * moveZ)));
+            vertexes.push_back(new Point(-x + moveX + (j * moveX) , -y , -z + i * moveZ));
+
+            normal.push_back(new Point(0, -1, 0));
+            normal.push_back(new Point(0, -1, 0));
+            normal.push_back(new Point(0, -1, 0));
+
+            vertexes.push_back(new Point(-x + moveX + (j * moveX) , -y , -z + moveZ + i * moveZ));
+            vertexes.push_back(new Point(-x + (j * moveX) , -y , -z + moveZ + i * moveZ));
+            vertexes.push_back(new Point(-x + (j * moveX) , -y , -z + (i * moveZ)));
+
+            normal.push_back(new Point(0, -1, 0));
+            normal.push_back(new Point(0, -1, 0));
+            normal.push_back(new Point(0, -1, 0));
+
+            /*
             file << -x + moveX + (j * moveX) << " " << -y << " " << -z + moveZ + i * moveZ << endl;
             file << -x + (j * moveX) << " " << -y << " " << -z + (i * moveZ) << endl;
             file << -x + moveX + (j * moveX) << " " << -y << " " << -z + i * moveZ << endl;
@@ -107,10 +224,27 @@ void box(float a, float b, float c, int optional, string nome) {
             file << -x + moveX + (j * moveX) << " " << -y << " " << -z + moveZ + i * moveZ << endl;
             file << -x + (j * moveX) << " " << -y << " " << -z + moveZ + i * moveZ << endl;
             file << -x + (j * moveX) << " " << -y << " " << -z + (i * moveZ) << endl;
-
+            */
 
 
             // frente
+            vertexes.push_back(new Point(-x + moveX + (j * moveX) , -y + moveY + i * moveY , z));
+            vertexes.push_back(new Point(-x + (j * moveX) , -y + (i * moveY) , z));
+            vertexes.push_back(new Point(-x + moveX + (j * moveX) , -y + i * moveY , z));
+
+            normal.push_back(new Point(0, 0, 1));
+            normal.push_back(new Point(0, 0, 1));
+            normal.push_back(new Point(0, 0, 1));
+
+            vertexes.push_back(new Point(-x + moveX + (j * moveX) , -y + moveY + i * moveY , z));
+            vertexes.push_back(new Point(-x + (j * moveX) , -y + moveY + (i * moveY) , z));
+            vertexes.push_back(new Point(-x + (j * moveX) , -y + (i * moveY) , z));
+
+            normal.push_back(new Point(0, 0, 1));
+            normal.push_back(new Point(0, 0, 1));
+            normal.push_back(new Point(0, 0, 1));
+
+            /*
             file << -x + moveX + (j * moveX) << " " << -y + moveY + i * moveY << " " << z << endl;
             file << -x + (j * moveX) << " " << -y + (i * moveY) << " " << z << endl;
             file << -x + moveX + (j * moveX) << " " << -y + i * moveY << " " << z << endl;
@@ -118,9 +252,26 @@ void box(float a, float b, float c, int optional, string nome) {
             file << -x + moveX + (j * moveX) << " " << -y + moveY + i * moveY << " " << z << endl;
             file << -x + (j * moveX) << " " << -y + moveY + (i * moveY) << " " << z << endl;
             file << -x + (j * moveX) << " " << -y + (i * moveY) << " " << z << endl;
-
+            */
 
             // trás
+            vertexes.push_back(new Point(-x + (j * moveX) , -y + (i * moveY) , -z));
+            vertexes.push_back(new Point(-x + moveX + (j * moveX) , -y + moveY + i * moveY , -z));
+            vertexes.push_back(new Point(-x + moveX + (j * moveX) , -y + i * moveY , -z));
+
+            normal.push_back(new Point(0, 0, -1));
+            normal.push_back(new Point(0, 0, -1));
+            normal.push_back(new Point(0, 0, -1));
+
+            vertexes.push_back(new Point(-x + (j * moveX) , -y + moveY + (i * moveY) , -z));
+            vertexes.push_back(new Point(-x + moveX + (j * moveX) , -y + moveY + i * moveY , -z));
+            vertexes.push_back(new Point(-x + (j * moveX) , -y + (i * moveY) , -z));
+
+            normal.push_back(new Point(0, 0, -1));
+            normal.push_back(new Point(0, 0, -1));
+            normal.push_back(new Point(0, 0, -1));
+
+            /*
             file << -x + (j * moveX) << " " << -y + (i * moveY) << " " << -z << endl;
             file << -x + moveX + (j * moveX) << " " << -y + moveY + i * moveY << " " << -z << endl;
             file << -x + moveX + (j * moveX) << " " << -y + i * moveY << " " << -z << endl;
@@ -128,8 +279,26 @@ void box(float a, float b, float c, int optional, string nome) {
             file << -x + (j * moveX) << " " << -y + moveY + (i * moveY) << " " << -z << endl;
             file << -x + moveX + (j * moveX) << " " << -y + moveY + i * moveY << " " << -z << endl;
             file << -x + (j * moveX) << " " << -y + (i * moveY) << " " << -z << endl;
+            */
 
             // lado direito
+            vertexes.push_back(new Point(x , -y + (i * moveY) , -z + (j * moveZ)));
+            vertexes.push_back(new Point(x , -y + moveY + i * moveY , -z + moveZ + (j * moveZ)));
+            vertexes.push_back(new Point(x , -y + i * moveY , -z + moveZ + (j * moveZ)));
+
+            normal.push_back(new Point(1, 0, 0));
+            normal.push_back(new Point(1, 0, 0));
+            normal.push_back(new Point(1, 0, 0));
+
+            vertexes.push_back(new Point(x , -y + moveY + (i * moveY) , -z + (j * moveZ)));
+            vertexes.push_back(new Point(x , -y + moveY + i * moveY , -z + moveZ + (j * moveZ)));
+            vertexes.push_back(new Point(x , -y + (i * moveY) , -z + (j * moveZ)));
+
+            normal.push_back(new Point(1, 0, 0));
+            normal.push_back(new Point(1, 0, 0));
+            normal.push_back(new Point(1, 0, 0));
+
+            /*
             file << x << " " << -y + (i * moveY) << " " << -z + (j * moveZ) << endl;
             file << x << " " << -y + moveY + i * moveY << " " << -z + moveZ + (j * moveZ) << endl;
             file << x << " " << -y + i * moveY << " " << -z + moveZ + (j * moveZ) << endl;
@@ -137,8 +306,26 @@ void box(float a, float b, float c, int optional, string nome) {
             file << x << " " << -y + moveY + (i * moveY) << " " << -z + (j * moveZ) << endl;
             file << x << " " << -y + moveY + i * moveY << " " << -z + moveZ + (j * moveZ) << endl;
             file << x << " " << -y + (i * moveY) << " " << -z + (j * moveZ) << endl;
+            */
 
             // lado esquerdo
+            vertexes.push_back(new Point(-x , -y + moveY + i * moveY , -z + moveZ + (j * moveZ)));
+            vertexes.push_back(new Point(-x , -y + (i * moveY) , -z + (j * moveZ)));
+            vertexes.push_back(new Point(-x , -y + i * moveY , -z + moveZ + (j * moveZ)));
+
+            normal.push_back(new Point(-1, 0, 0));
+            normal.push_back(new Point(-1, 0, 0));
+            normal.push_back(new Point(-1, 0, 0));
+
+            vertexes.push_back(new Point(-x , -y + moveY + i * moveY , -z + moveZ + (j * moveZ)));
+            vertexes.push_back(new Point(-x , -y + moveY + (i * moveY) , -z + (j * moveZ)));
+            vertexes.push_back(new Point(-x , -y + (i * moveY) , -z + (j * moveZ)));
+
+            normal.push_back(new Point(-1, 0, 0));
+            normal.push_back(new Point(-1, 0, 0));
+            normal.push_back(new Point(-1, 0, 0));
+
+            /*
             file << -x << " " << -y + moveY + i * moveY << " " << -z + moveZ + (j * moveZ) << endl;
             file << -x << " " << -y + (i * moveY) << " " << -z + (j * moveZ) << endl;
             file << -x << " " << -y + i * moveY << " " << -z + moveZ + (j * moveZ) << endl;
@@ -146,21 +333,24 @@ void box(float a, float b, float c, int optional, string nome) {
             file << -x << " " << -y + moveY + i * moveY << " " << -z + moveZ + (j * moveZ) << endl;
             file << -x << " " << -y + moveY + (i * moveY) << " " << -z + (j * moveZ) << endl;
             file << -x << " " << -y + (i * moveY) << " " << -z + (j * moveZ) << endl;
+            */
         }
     }
+    writeToFile(vertexes, normal, nome);
 
 
 }
 
 void sphere(float radius, int slices, int stacks, string nome) {
-    ofstream file(PATH + nome);
+    //ofstream file(PATH + nome);
     float moveL = (2 * M_PI) / slices;
     float moveH = M_PI / stacks;
     float x1, x2, x3;
     float y1, y2, y3;
     float z1, z2, z3;
+    vector<Point*> vertexes, normal;
 
-    file << 6 * slices * (stacks - 2) + 6 * slices << endl;
+    //file << 6 * slices * (stacks - 2) + 6 * slices << endl;
 
 
     for (int i = 0; i < stacks / 2; i++) {
@@ -178,87 +368,168 @@ void sphere(float radius, int slices, int stacks, string nome) {
             y3 = radius * sin(moveH + moveH * i);
             z3 = radius * cos(moveH + moveH * i) * cos(moveL * j);
 
+            vertexes.push_back(new Point(x1 , y1 ,z1));
+            vertexes.push_back(new Point(x2 , y2 , z2));
+            vertexes.push_back(new Point(x3 , y3, z3));
+
+            normal.push_back(Point::getNormal(new Point(x1, y1, z1)));
+            normal.push_back(Point::getNormal(new Point(x2, y2, z2)));
+            normal.push_back(Point::getNormal(new Point(x3, y3, z3)));
+
+            /*
             file << x1 << " " << y1 << " " << z1 << endl;
             file << x2 << " " << y2 << " " << z2 << endl;
             file << x3 << " " << y3 << " " << z3 << endl;
+            */
 
             if (i != (stacks / 2) - 1) {
+                vertexes.push_back(new Point(x3 , y3 , z3));
+                vertexes.push_back(new Point(x2 , y2 ,z2));
+                vertexes.push_back(new Point(radius * cos(moveH + moveH * i) * sin(moveL + moveL * j),
+                        radius * sin(moveH + moveH * i),
+                        radius * cos(moveH + moveH * i) * cos(moveL + moveL * j)));
+
+                normal.push_back(Point::getNormal(new Point(x3, y3, z3)));
+                normal.push_back(Point::getNormal(new Point(x2, y2, z2)));
+                normal.push_back(Point::getNormal(new Point(radius * cos(moveH + moveH * i) * sin(moveL + moveL * j),
+                    radius * sin(moveH + moveH * i),
+                    radius * cos(moveH + moveH * i) * cos(moveL + moveL * j))));
+
+                /*
                 file << x3 << " " << y3 << " " << z3 << endl;
                 file << x2 << " " << y2 << " " << z2 << endl;
 
                 file << radius * cos(moveH + moveH * i) * sin(moveL + moveL * j) << " "
                      << radius * sin(moveH + moveH * i) << " "
                      << radius * cos(moveH + moveH * i) * cos(moveL + moveL * j) << endl;
+                */
             }
+            vertexes.push_back(new Point(x2,-y2,z2));
+            vertexes.push_back(new Point(x1,-y1,z1));
+            vertexes.push_back(new Point(x3,-y3,z3));
 
+            normal.push_back(Point::getNormal(new Point(x2, -y2, z2)));
+            normal.push_back(Point::getNormal(new Point(x1, -y1, z1)));
+            normal.push_back(Point::getNormal(new Point(x3, -y3, z3)));
+
+            /*
             file << x2 << " " << -y2 << " " << z2 << endl;
             file << x1 << " " << -y1 << " " << z1 << endl;
             file << x3 << " " << -y3 << " " << z3 << endl;
+            */
             if (i != (stacks / 2) - 1) {
+                vertexes.push_back(new Point(x2 , -y2, z2));
+                vertexes.push_back(new Point(x3 , -y3 ,z3));
+                vertexes.push_back(new Point(radius * cos(moveH + moveH * i) * sin(moveL + moveL * j) ,
+                        -(radius * sin(moveH + moveH * i)) ,
+                        radius * cos(moveH + moveH * i) * cos(moveL + moveL * j)));
+
+                normal.push_back(Point::getNormal(new Point(x2, -y2, z2)));
+                normal.push_back(Point::getNormal(new Point(x3, -y3, z3)));
+                normal.push_back(Point::getNormal(new Point(radius * cos(moveH + moveH * i) * sin(moveL + moveL * j),
+                    -(radius * sin(moveH + moveH * i)),
+                    radius * cos(moveH + moveH * i) * cos(moveL + moveL * j))));
+
+
+                /*
                 file << x2 << " " << -y2 << " " << z2 << endl;
                 file << x3 << " " << -y3 << " " << z3 << endl;
 
                 file << radius * cos(moveH + moveH * i) * sin(moveL + moveL * j) << " "
                      << -(radius * sin(moveH + moveH * i)) << " "
                      << radius * cos(moveH + moveH * i) * cos(moveL + moveL * j) << endl;
+                     */
             }
         }
 
-
     }
+    writeToFile(vertexes, normal, nome);
 }
 
 void cone(float radius, float height, int slices, int stacks, string nome) {
-    ofstream file(PATH + nome);
+    //ofstream file(PATH + nome);
     float alfa, x, z;
     float h = height;
     float l = sqrt(pow(h, 2) + pow(radius, 2)) / stacks;
     float t = radius / stacks;
     float dimSide = (2 * M_PI) / slices;
-    file << 2 * slices * 3 + slices * 6 * (stacks - 1) << endl;
+
+    vector<Point*> vertexes, normal;
+    
+    //file << 2 * slices * 3 + slices * 6 * (stacks - 1) << endl;
     for (int i = 0; i < stacks; i++) {
         for (int j = 0; j < slices; j++) {
             alfa = j * dimSide;
             if (i == 0) {
-                file << 0 << " " << 0 << " " << 0 << endl;
+                //file << 0 << " " << 0 << " " << 0 << endl;
+                vertexes.push_back(new Point(0,0,0));
                 x = radius * sin(alfa + dimSide);
                 z = radius * cos(alfa + dimSide);
-                file << x << " " << 0 << " " << z << endl;
+                //file << x << " " << 0 << " " << z << endl;
+                vertexes.push_back(new Point(x,0,z));
 
                 x = radius * sin(alfa);
                 z = radius * cos(alfa);
-                file << x << " " << 0 << " " << z << endl;
+                //file << x << " " << 0 << " " << z << endl;
+                vertexes.push_back(new Point(x,0,z));
+
+                normal.push_back(new Point());
+                normal.push_back(new Point());
+                normal.push_back(new Point());
             }
             if (i < stacks - 1) {
                 x = (radius - ((i + 1) * t)) * sin(alfa + dimSide);
                 z = (radius - ((i + 1) * t)) * cos(alfa + dimSide);
-                file << x << " " << (i + 1) * l << " " << z << endl;
+                //file << x << " " << (i + 1) * l << " " << z << endl;
+                vertexes.push_back(new Point(x , (i + 1) * l , z));
 
                 x = (radius - ((i + 1) * t)) * sin(alfa);
                 z = (radius - ((i + 1) * t)) * cos(alfa);
-                file << x << " " << (i + 1) * l << " " << z << endl;
+                //file << x << " " << (i + 1) * l << " " << z << endl;
+                vertexes.push_back(new Point(x , (i + 1) * l , z));
                 x = (radius - (i * t)) * sin(alfa);
                 z = (radius - (i * t)) * cos(alfa);
-                file << x << " " << i * l << " " << z << endl;
+                //file << x << " " << i * l << " " << z << endl;
+                vertexes.push_back(new Point(x , i * l , z));
 
-                file << x << " " << i * l << " " << z << endl;
+                normal.push_back(new Point());
+                normal.push_back(new Point());
+                normal.push_back(new Point());
+
+                //file << x << " " << i * l << " " << z << endl;
+                vertexes.push_back(new Point(x , i * l , z));
                 x = (radius - (i * t)) * sin(alfa + dimSide);
                 z = (radius - (i * t)) * cos(alfa + dimSide);
-                file << x << " " << i * l << " " << z << endl;
+                //file << x << " " << i * l << " " << z << endl;
+                vertexes.push_back(new Point(x , i * l, z));
                 x = (radius - ((i + 1) * t)) * sin(alfa + dimSide);
                 z = (radius - ((i + 1) * t)) * cos(alfa + dimSide);
-                file << x << " " << (i + 1) * l << " " << z << endl;
+                //file << x << " " << (i + 1) * l << " " << z << endl;
+                vertexes.push_back(new Point(x , (i + 1) * l , z));
+
+                normal.push_back(new Point());
+                normal.push_back(new Point());
+                normal.push_back(new Point());
             } else {
                 x = (radius - (i * t)) * sin(alfa);
                 z = (radius - (i * t)) * cos(alfa);
-                file << x << " " << i * l << " " << z << endl;
+                //file << x << " " << i * l << " " << z << endl;
+                vertexes.push_back(new Point(x , i * l , z));
                 x = (radius - (i * t)) * sin(alfa + dimSide);
                 z = (radius - (i * t)) * cos(alfa + dimSide);
-                file << x << " " << i * l << " " << z << endl;
-                file << 0 << " " << (i + 1) * l << " " << 0 << endl;
+                //file << x << " " << i * l << " " << z << endl;
+                //file << 0 << " " << (i + 1) * l << " " << 0 << endl;
+
+                vertexes.push_back(new Point(x , i * l , z));
+                vertexes.push_back(new Point(0 , (i + 1) * l , 0));
+
+                normal.push_back(new Point());
+                normal.push_back(new Point());
+                normal.push_back(new Point());
             }
         }
     }
+    writeToFile(vertexes, normal, nome);
 }
 
 void insertXML(string file, string name) {

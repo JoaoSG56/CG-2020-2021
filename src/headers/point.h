@@ -21,6 +21,7 @@ class Point {
         void setX(float);
         void setY(float);
         void setZ(float);
+        static Point* getNormal(Point* p);
 
 };
 
