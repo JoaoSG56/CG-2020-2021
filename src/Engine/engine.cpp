@@ -224,7 +224,7 @@ void returnError(string error) {
     //exit(0);
 }
 
-void menuChoice(int num){
+void menuCamChoice(int num){
     switch (num) {
         case 1:
             camOption = 1;
@@ -234,15 +234,44 @@ void menuChoice(int num){
             break;
         case -1:
             glutDestroyWindow(window);
-            //exit(0);
+            exit(0);
     }
 }
 
-void createMenu(){
-    menu_id = glutCreateMenu(menuChoice);
-    glutAddMenuEntry("FPS Camera",1);
-    glutAddMenuEntry("Static Camera",0);
-    glutAddMenuEntry("Quit",-1);
+void menuModeChoice(int num) {
+    switch (num) {
+    case 0:
+        mode = GL_LINE;
+        break;
+    case 1:
+        mode = GL_FILL;
+        break;
+    case 2:
+        mode = GL_POINT;
+        break;
+    default:
+        break;
+    }
+
+}
+
+void createMenu() {
+    int camMenu, modeMenu;
+    camMenu = glutCreateMenu(menuCamChoice);
+    glutAddMenuEntry("FPS Camera", 1);
+    glutAddMenuEntry("Static Camera", 0);
+
+    modeMenu = glutCreateMenu(menuModeChoice);
+    glutAddMenuEntry("GL_LINE", 0);
+    glutAddMenuEntry("GL_FILL", 1);
+    glutAddMenuEntry("GL_POINT", 2);
+
+    menu_id = glutCreateMenu(menuCamChoice);
+
+    glutAddSubMenu("Camera", camMenu);
+    glutAddSubMenu("Mode", modeMenu);
+    glutAddMenuEntry("Quit", -1);
+
     glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 
