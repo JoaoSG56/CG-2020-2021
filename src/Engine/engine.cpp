@@ -35,6 +35,7 @@ int window;
 int menu_id;
 int camOption = 0; // 0 - static, 1 - fps
 bool show_orbits = true;
+bool show_axis = true;
 
 vector<Translation*> orbits;
 
@@ -142,7 +143,8 @@ void renderScene(void) {
         focus->getX(), focus->getY(), focus->getZ(),
         0.0f, 1.0f, 0.0f);
 
-    eixos();
+    if(show_axis)
+        eixos();
 
     render(scene);
     if (show_orbits) {
@@ -224,6 +226,19 @@ void returnError(string error) {
     //exit(0);
 }
 
+
+void menuChoice(int num) {
+    switch (num) {
+    case 1:
+        show_axis = !show_axis;
+        break;
+
+    case -1:
+        glutDestroyWindow(window);
+        exit(0);
+    }
+}
+
 void menuCamChoice(int num){
     switch (num) {
         case 1:
@@ -232,9 +247,7 @@ void menuCamChoice(int num){
         case 0:
             camOption = 0;
             break;
-        case -1:
-            glutDestroyWindow(window);
-            exit(0);
+
     }
 }
 
@@ -266,10 +279,11 @@ void createMenu() {
     glutAddMenuEntry("GL_FILL", 1);
     glutAddMenuEntry("GL_POINT", 2);
 
-    menu_id = glutCreateMenu(menuCamChoice);
+    menu_id = glutCreateMenu(menuChoice);
 
     glutAddSubMenu("Camera", camMenu);
     glutAddSubMenu("Mode", modeMenu);
+    glutAddMenuEntry("Togle Axis", 1);
     glutAddMenuEntry("Quit", -1);
 
     glutAttachMenu(GLUT_RIGHT_BUTTON);
