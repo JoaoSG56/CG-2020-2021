@@ -7,10 +7,11 @@ Group::Group() {
     B = 1;
 }
 
-Group::Group(std::vector<Transform*> t, std::vector<Figure*> f, std::vector<Group*> c){
+Group::Group(std::vector<Transform*> t, std::vector<Figure*> f, std::vector<Group*> c, std::vector<Light*> l){
     transforms = t;
     figures = f;
     childs = c;
+    lights = l;
     R = 1;
     G = 1;
     B = 1;
@@ -25,6 +26,10 @@ std::vector<Figure*> Group::getFigures(){
 std::vector<Group*> Group::getChilds(){
     return childs;
 }
+std::vector<Light*> Group::getLights() {
+    return lights;
+}
+
 void Group::pushTransform(Transform* t){
     transforms.push_back(t);
 }
@@ -33,6 +38,9 @@ void Group::pushFigure(Figure* f){
 }
 void Group::pushGroup(Group* g){
     childs.push_back(g);
+}
+void Group::pushLight(Light* l) {
+    lights.push_back(l);
 }
 
 float Group::getR() {
