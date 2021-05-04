@@ -6,12 +6,13 @@ int* patches;
 vector<Point*> controls;
 int n_patches;
 int n_controls;
-vector<Point*> toDraw;
+vector<Point*> vertexes;
+vector<Point*> normal;
 
 
 void writePatch(string fileName);
 
-Point* detBezierCurve(float t, float* p1, float* p2, float* p3, float* p4) {
+Point* evalBezierCurve(float t, float* p1, float* p2, float* p3, float* p4) {
 
     float x, y, z;
 
@@ -29,19 +30,20 @@ Point* detBezierCurve(float t, float* p1, float* p2, float* p3, float* p4) {
     return new Point(x, y, z);
 }
 
+
 Point* bezierDetermine(float u, float v, int patch) {
     float matrix[4][3], res[4][3];
     int j = 0, k = 0;
     for (int i = 0; i < 16; i++) {
-        matrix[j][0] = controls[patches[16*patch + i]]->getX();
-        matrix[j][1] = controls[patches[16*patch + i]]->getY();
-        matrix[j][2] = controls[patches[16*patch + i]]->getZ();
+        matrix[j][0] = controls[patches[16 * patch + i]]->getX();
+        matrix[j][1] = controls[patches[16 * patch + i]]->getY();
+        matrix[j][2] = controls[patches[16 * patch + i]]->getZ();
 
         j++;
 
         if (j % 4 == 0) {
-            Point* p = detBezierCurve(u,
-                                      matrix[0], matrix[1], matrix[2], matrix[3]
+            Point* p = evalBezierCurve(u,
+                                       matrix[0], matrix[1], matrix[2], matrix[3]
             );
             res[k][0] = p->getX();
             res[k][1] = p->getY();
@@ -51,12 +53,32 @@ Point* bezierDetermine(float u, float v, int patch) {
             j = 0;
         }
     }
-    return detBezierCurve(v,
-                        res[0],
-                        res[1],
-                        res[2],
-                        res[3]);
+    return evalBezierCurve(v,
+                           res[0],
+                           res[1],
+                           res[2],
+                           res[3]);
 
+}
+
+void toVector(float* a,float * b, float* res){
+    res[0] = b[0]- a[0];
+    res[1] = b[1]- a[1];
+    res[2] = b[2]- a[2];
+}
+
+void cross(float* a, float* b, float* res) {
+
+    res[0] = a[1] * b[2] - a[2] * b[1];
+    res[1] = a[2] * b[0] - a[0] * b[2];
+    res[2] = a[0] * b[1] - a[1] * b[0];
+}
+
+void normalize(float* a) {
+    float l = sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
+    a[0] = a[0] / l;
+    a[1] = a[1] / l;
+    a[2] = a[2] / l;
 }
 
 void renderBezierPatch(int tess, int n) {
@@ -74,18 +96,51 @@ void renderBezierPatch(int tess, int n) {
             Point* p2 = bezierDetermine(u2, v, n);
             Point* p3 = bezierDetermine(u2, v2, n);
 
-            toDraw.push_back(p0);
-            toDraw.push_back(p2);
-            toDraw.push_back(p3);
+            float res[3];
+            float res2[3];
+            float resfinal[4];
+            float a[3] = {p0->getX(),p0->getY(),p0->getZ()};
+            float b[3] = {p1->getX(),p1->getY(),p1->getZ()};
+            float c[3] = {p2->getX(),p2->getY(),p2->getZ()};
+            float d[3] = {p3->getX(),p3->getY(),p3->getZ()};
 
-            toDraw.push_back(p0);
-            toDraw.push_back(p3);
-            toDraw.push_back(p1);
+            toVector(a,c,res);
+            toVector(a,d,res2);
+            cross(res,res2,resfinal);
+            normalize(resfinal);
+
+            normal.push_back(new Point(resfinal[0],resfinal[1],resfinal[2]));
+            normal.push_back(new Point(resfinal[0],resfinal[1],resfinal[2]));
+            normal.push_back(new Point(resfinal[0],resfinal[1],resfinal[2]));
+
+            vertexes.push_back(p0);
+            vertexes.push_back(p2);
+            vertexes.push_back(p3);
+
+
+            //cross(c,a,res); // teste (está ao contrário)
+            //normalize(res);
+
+            toVector(a,d,res);
+            toVector(a,b,res2);
+            cross(res,res2,resfinal);
+            normalize(resfinal);
+
+
+            normal.push_back(new Point(resfinal[0],resfinal[1],resfinal[2]));
+            normal.push_back(new Point(resfinal[0],resfinal[1],resfinal[2]));
+            normal.push_back(new Point(resfinal[0],resfinal[1],resfinal[2]));
+
+            vertexes.push_back(p0);
+            vertexes.push_back(p3);
+            vertexes.push_back(p1);
 
 
         }
     }
 }
+
+
 
 int bezierParser(int tess, string file, string nameFile) {
 
@@ -133,7 +188,6 @@ int bezierParser(int tess, string file, string nameFile) {
     }
     for (int i = 0; i < n_patches; i++)
         renderBezierPatch(tess, i);
-
     writePatch(nameFile);
 }
 
@@ -141,9 +195,12 @@ void writePatch(string fileName) {
 
     string filePath = "../src/Files/" + fileName;
     ofstream file(filePath);
-    file << toDraw.size() << endl;
-    for (int i = 0; i < toDraw.size(); i++) {
-        file << toDraw[i]->getX() << " " << toDraw[i]->getY() << " " << toDraw[i]->getZ() << endl;
+    file << vertexes.size() << endl;
+    for (int i = 0; i < vertexes.size(); i++) {
+        file << vertexes[i]->getX() << " " << vertexes[i]->getY() << " " << vertexes[i]->getZ() << endl;
+    }
+    for (int i = 0; i < normal.size(); i++) {
+        file << normal[i]->getX() << " " << normal[i]->getY() << " " << normal[i]->getZ() << endl;
     }
     file.close();
 

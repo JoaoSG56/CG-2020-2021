@@ -9,6 +9,17 @@
 #include <vector>
 
 using namespace std;
+
+class Patch{
+    vector<Point*> controlPoints;
+
+public:
+    Patch();
+    Patch(vector<Point*>);
+    vector<Point*> getCPoints();
+    void addPoint(Point*);
+};
+
 int bezierParser(int tess,string filePath, string nameFile);
 
 #endif
