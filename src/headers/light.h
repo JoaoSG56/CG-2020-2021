@@ -13,7 +13,7 @@ class Light {
         Type getType();
         Point* getPoint();
         void setPoint(Point* p);
-        void draw();
+        void render();
 };
 
 

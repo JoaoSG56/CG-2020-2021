@@ -12,7 +12,7 @@ int readfile(string ficheiro, Figure* f) {
     ifstream inputFileStream(ficheiro);
 
     vector<Point*> points_list;
-
+    vector<Point*> normal_list;
     if (!inputFileStream.is_open()) {
         cout << "Ficheiro '" + ficheiro + "' não encontrado" << endl;
         return 0;
@@ -35,8 +35,24 @@ int readfile(string ficheiro, Figure* f) {
         points_list.push_back(v);
 
     }
+    // normals
+    for( int i = 0;i<count;i++){
+        string line;
+        getline(inputFileStream, line);
 
-    f->setUp(points_list);
+        istringstream lineStream(line);
+        string a, b, c;
+        getline(lineStream, a, ' ');
+        getline(lineStream, b, ' ');
+        getline(lineStream, c, ' ');
+
+        Point* v = new Point(atof(a.c_str()), atof(b.c_str()), atof(c.c_str()));
+        normal_list.push_back(v);
+
+    }
+
+    f->setUp(points_list,normal_list);
+
 
     inputFileStream.close();
     return 1;

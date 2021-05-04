@@ -13,12 +13,12 @@
 
 class Figure{
     private:
-        float buffer_size;
-        GLuint buffers[1];
+        float buffer_size[2];
+        GLuint buffers[2];
 
     public:
         Figure();
-        void setUp(std::vector<Point*> vertexes);
+        void setUp(std::vector<Point*> vertexes, std::vector<Point*> normal);
         void draw();
 };
 

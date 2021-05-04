@@ -1,8 +1,10 @@
 #include <stdlib.h>
 #include"../headers/figure.h"
 #include "../headers/group.h"
+
 #ifdef __APPLE__
 #define GL_SILENCE_DEPRECATION
+
 #include <GLUT/glut.h>
 
 #else
@@ -44,7 +46,7 @@ int timebase = 0, frame = 0;
 CameraFPS* camera = new CameraFPS();
 Camera* cameras[2];
 
-Group *scene = new Group();
+Group* scene = new Group();
 
 void eixos() {
     glBegin(GL_LINES);
@@ -70,10 +72,10 @@ void displayFPS() {
     frame++;
     time = glutGet(GLUT_ELAPSED_TIME);
     if (time - timebase > 1000) {
-        float fps = frame * 1000.0/(time - timebase);
+        float fps = frame * 1000.0 / (time - timebase);
         timebase = time;
         frame = 0;
-        sprintf(title,"Engine  |  %.2f FPS",fps);
+        sprintf(title, "Engine  |  %.2f FPS", fps);
         glutSetWindowTitle(title);
     }
 }
@@ -107,23 +109,27 @@ void changeSize(int w, int h) {
 void render(Group* group) {
     glPushMatrix();
 
+    vector<Light*> lights = group->getLights();
+    for (int i = 0; i < lights.size(); i++)
+        lights[i]->render();
+
     vector<Transform*> tranformations = group->getTransforms();
     for (int i = 0; i < tranformations.size(); i++)
         tranformations[i]->execute();
-   // float R = 1, G = 1, B = 1;
-    float R = group->getR()/255;
-    float G = group->getG()/255;
-    float B = group->getB()/255;
+    // float R = 1, G = 1, B = 1;
+    float R = group->getR() / 255;
+    float G = group->getG() / 255;
+    float B = group->getB() / 255;
 
-    glColor3f(R,G,B);
+    glColor3f(R, G, B);
     glPolygonMode(GL_FRONT_AND_BACK, mode);
     vector<Figure*> figures = group->getFigures();
-    for(int i = 0; i< figures.size();i++)
+    for (int i = 0; i < figures.size(); i++)
         figures[i]->draw();
 
 
     vector<Group*> children = group->getChilds();
-    for(int i = 0; i< children.size();i++)
+    for (int i = 0; i < children.size(); i++)
         render(children[i]);
 
     glPopMatrix();
@@ -137,19 +143,19 @@ void renderScene(void) {
     // set the camera
     glLoadIdentity();
 
-    Point *focus = cameras[camOption]->getFocus();
+    Point* focus = cameras[camOption]->getFocus();
     Point* position = cameras[camOption]->getPosition();
     gluLookAt(position->getX(), position->getY(), position->getZ(),
-        focus->getX(), focus->getY(), focus->getZ(),
-        0.0f, 1.0f, 0.0f);
+              focus->getX(), focus->getY(), focus->getZ(),
+              0.0f, 1.0f, 0.0f);
 
-    if(show_axis)
+    if (show_axis)
         eixos();
 
     render(scene);
     if (show_orbits) {
         glColor3f(1, 1, 1);
-        for (int i = 0;i < orbits.size();i++)
+        for (int i = 0; i < orbits.size(); i++)
             orbits[i]->drawCurve();
     }
     displayFPS();
@@ -204,19 +210,20 @@ void keyboardfunc(unsigned char key, int x, int y) {
     }
     glutPostRedisplay();
 }
-void moveMouse(int x, int y ){
-    if(camOption!=1) return;
+
+void moveMouse(int x, int y) {
+    if (camOption != 1) return;
 
 
-    float centerX = glutGet(GLUT_WINDOW_WIDTH)/2;
-    float centerY = glutGet(GLUT_WINDOW_HEIGHT)/2;
+    float centerX = glutGet(GLUT_WINDOW_WIDTH) / 2;
+    float centerY = glutGet(GLUT_WINDOW_HEIGHT) / 2;
 
     float dx = x - centerX;
     float dy = y - centerY;
 
-    cameras[camOption]->turn(dx,dy);
+    cameras[camOption]->turn(dx, dy);
 
-    glutWarpPointer(centerX,centerY);
+    glutWarpPointer(centerX, centerY);
     glutPostRedisplay();
 
 }
@@ -229,17 +236,17 @@ void returnError(string error) {
 
 void menuChoice(int num) {
     switch (num) {
-    case 1:
-        show_axis = !show_axis;
-        break;
+        case 1:
+            show_axis = !show_axis;
+            break;
 
-    case -1:
-        glutDestroyWindow(window);
-        exit(0);
+        case -1:
+            glutDestroyWindow(window);
+            exit(0);
     }
 }
 
-void menuCamChoice(int num){
+void menuCamChoice(int num) {
     switch (num) {
         case 1:
             camOption = 1;
@@ -253,17 +260,17 @@ void menuCamChoice(int num){
 
 void menuModeChoice(int num) {
     switch (num) {
-    case 0:
-        mode = GL_LINE;
-        break;
-    case 1:
-        mode = GL_FILL;
-        break;
-    case 2:
-        mode = GL_POINT;
-        break;
-    default:
-        break;
+        case 0:
+            mode = GL_LINE;
+            break;
+        case 1:
+            mode = GL_FILL;
+            break;
+        case 2:
+            mode = GL_POINT;
+            break;
+        default:
+            break;
     }
 
 }
@@ -321,7 +328,24 @@ void menu() {
 
 }
 
-int main(int argc, char **argv) {
+void initGL(){
+    //  OpenGL settings
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+
+    // Textures
+
+    // Lights
+    glEnable(GL_LIGHT0);
+    //glEnable(GL_LIGHTING);
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_NORMAL_ARRAY);
+
+
+}
+
+int main(int argc, char** argv) {
 
     // init GLUT and the window
     glutInit(&argc, argv);
@@ -335,7 +359,6 @@ int main(int argc, char **argv) {
 #endif
 
 
-    glEnableClientState(GL_VERTEX_ARRAY);
     cameras[0] = new CameraStatic();
     cameras[1] = new CameraFPS();
     if (argc != 2 || !regex_match(argv[1], regex("([a-zA-Z0-9\-_])+\.xml"))) {
@@ -344,7 +367,7 @@ int main(int argc, char **argv) {
         //exit(0);
         return 0;
     }
-    if (!readXML(argv[1], scene,&orbits)) {
+    if (!readXML(argv[1], scene, &orbits)) {
         menu();
         cout << "Ficheiro Inválido ou Mal escrito\nCertificar que o ficheiro se encontra em /src/Files/" << endl;
         //exit(0);
@@ -364,17 +387,14 @@ int main(int argc, char **argv) {
     glutSpecialFunc(keyboardspecial);
     glutPassiveMotionFunc(moveMouse);
 
-
-//  OpenGL settings
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
+    initGL();
 
     createMenu();
 
     glutSetCursor(GLUT_CURSOR_NONE);
-    float centerX = glutGet(GLUT_WINDOW_WIDTH)/2;
-    float centerY = glutGet(GLUT_WINDOW_HEIGHT)/2;
-    glutWarpPointer(centerX,centerY);
+    float centerX = glutGet(GLUT_WINDOW_WIDTH) / 2;
+    float centerY = glutGet(GLUT_WINDOW_HEIGHT) / 2;
+    glutWarpPointer(centerX, centerY);
 // enter GLUT's main cycle
     glutMainLoop();
 
