@@ -44,7 +44,7 @@ int readfile(string ficheiro, Figure* f) {
         string a, b, c;
         getline(lineStream, a, ' ');
         getline(lineStream, b, ' ');
-        getline(lineStream, c, ' ');
+        getline(lineStream, c, '\n');
 
         Point* v = new Point(atof(a.c_str()), atof(b.c_str()), atof(c.c_str()));
         normal_list.push_back(v);

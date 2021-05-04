@@ -108,11 +108,11 @@ void changeSize(int w, int h) {
 
 void render(Group* group) {
     glPushMatrix();
-
+    printf("lights\n");
     vector<Light*> lights = group->getLights();
     for (int i = 0; i < lights.size(); i++)
         lights[i]->render();
-
+    printf("transforms\n");
     vector<Transform*> tranformations = group->getTransforms();
     for (int i = 0; i < tranformations.size(); i++)
         tranformations[i]->execute();
@@ -121,13 +121,17 @@ void render(Group* group) {
     float G = group->getG() / 255;
     float B = group->getB() / 255;
 
+    printf("figures\n");
     glColor3f(R, G, B);
     glPolygonMode(GL_FRONT_AND_BACK, mode);
+    printf("def figures\n");
     vector<Figure*> figures = group->getFigures();
-    for (int i = 0; i < figures.size(); i++)
+    for (int i = 0; i < figures.size(); i++) {
+        printf("%d\n",i);
         figures[i]->draw();
+    }
 
-
+    printf("groups\n");
     vector<Group*> children = group->getChilds();
     for (int i = 0; i < children.size(); i++)
         render(children[i]);
@@ -136,7 +140,7 @@ void render(Group* group) {
 }
 
 void renderScene(void) {
-
+    printf("entrou\n");
     // clear buffers
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -151,14 +155,17 @@ void renderScene(void) {
 
     if (show_axis)
         eixos();
-
+    printf("v\n");
     render(scene);
+    printf("fack\n");
     if (show_orbits) {
         glColor3f(1, 1, 1);
         for (int i = 0; i < orbits.size(); i++)
             orbits[i]->drawCurve();
     }
+    printf("fa\n");
     displayFPS();
+    printf("a\n");
 
     // End of frame
     glutSwapBuffers();

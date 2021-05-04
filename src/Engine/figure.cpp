@@ -21,12 +21,13 @@ void Figure::setUp(std::vector<Point*> vertexes, std::vector<Point*> normal){
     }
 
 
-    glGenBuffers(1,buffers);
+    glGenBuffers(1,&buffer1);
+    glGenBuffers(1,&buffer2);
 
-    glBindBuffer(GL_ARRAY_BUFFER,buffers[0]);
+    glBindBuffer(GL_ARRAY_BUFFER,buffer1);
     glBufferData(GL_ARRAY_BUFFER,sizeof(float) * buffer_size[0] * 3, arr_vert, GL_STATIC_DRAW);
     // lights
-    glBindBuffer(GL_ARRAY_BUFFER,buffers[1]);
+    glBindBuffer(GL_ARRAY_BUFFER,buffer2);
     glBufferData(GL_ARRAY_BUFFER,sizeof(float) * buffer_size[1] * 3, normal_vert,GL_STATIC_DRAW);
 
     free(arr_vert);
@@ -34,17 +35,23 @@ void Figure::setUp(std::vector<Point*> vertexes, std::vector<Point*> normal){
 }
 
 void Figure::draw() {
+    printf("triangulos\n");
 
-    glBindBuffer(GL_ARRAY_BUFFER,buffers[0]);
+    glBindBuffer(GL_ARRAY_BUFFER,buffer1);
     glVertexPointer(3,GL_FLOAT,0,0);
-
+    printf("luzinhas\n");
     if(buffer_size[1]){
-        glBindBuffer(GL_ARRAY_BUFFER,buffers[1]);
+        glBindBuffer(GL_ARRAY_BUFFER,buffer2);
         glNormalPointer(GL_FLOAT,0,0);
     }
-
+    printf("enable\n");
     glEnable(GL_LIGHTING);
+    printf("bufsize\n");
+
+    printf("%f vs %f\n",buffer_size[0],buffer_size[1]);
     glDrawArrays(GL_TRIANGLES,0,buffer_size[0]);
+    printf("disable\n");
     glDisable(GL_LIGHTING);
+
 
 }
