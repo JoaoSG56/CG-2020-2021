@@ -140,7 +140,6 @@ void render(Group* group) {
 }
 
 void renderScene(void) {
-    printf("entrou\n");
     // clear buffers
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -155,17 +154,13 @@ void renderScene(void) {
 
     if (show_axis)
         eixos();
-    printf("v\n");
     render(scene);
-    printf("fack\n");
     if (show_orbits) {
         glColor3f(1, 1, 1);
         for (int i = 0; i < orbits.size(); i++)
             orbits[i]->drawCurve();
     }
-    printf("fa\n");
     displayFPS();
-    printf("a\n");
 
     // End of frame
     glutSwapBuffers();
@@ -341,6 +336,8 @@ void initGL(){
     glEnable(GL_CULL_FACE);
 
     // Textures
+    ilInit();
+    glEnable(GL_TEXTURE_2D);
 
     // Lights
     glEnable(GL_LIGHT0);
@@ -348,6 +345,7 @@ void initGL(){
 
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_NORMAL_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
 
 }
@@ -361,9 +359,11 @@ int main(int argc, char** argv) {
     glutInitWindowSize(800, 800);
     window = glutCreateWindow("CG@2020-2021");
 
+
 #ifndef __APPLE__
     glewInit();
 #endif
+    initGL();
 
 
     cameras[0] = new CameraStatic();
@@ -394,7 +394,6 @@ int main(int argc, char** argv) {
     glutSpecialFunc(keyboardspecial);
     glutPassiveMotionFunc(moveMouse);
 
-    initGL();
 
     createMenu();
 

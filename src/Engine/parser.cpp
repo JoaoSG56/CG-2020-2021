@@ -4,8 +4,9 @@
 using namespace tinyxml2;
 using namespace std;
 
-std::string XMLPath = "../src/Files/"; // for now
-std::string figures3dPath = "../src/Files/"; // for now
+string XMLPath = "../src/Files/"; // for now
+string fillesPath = "../src/Files/"; // for now
+string texturesPath = "../src/textures/";
 
 int readfile(string ficheiro, Figure* f) {
     string delimiter = " ";
@@ -13,6 +14,7 @@ int readfile(string ficheiro, Figure* f) {
 
     vector<Point*> points_list;
     vector<Point*> normal_list;
+    vector<Point*> texture_list;
     if (!inputFileStream.is_open()) {
         cout << "Ficheiro '" + ficheiro + "' não encontrado" << endl;
         return 0;
@@ -51,23 +53,80 @@ int readfile(string ficheiro, Figure* f) {
 
     }
 
-    f->setUp(points_list,normal_list);
+    // texturas
+    for( int i = 0;i<count;i++){
+        string line;
+        getline(inputFileStream, line);
+
+        istringstream lineStream(line);
+        string a, b, c;
+        getline(lineStream, a, ' ');
+        getline(lineStream, b, '\n');
+
+        Point* v = new Point(atof(a.c_str()), atof(b.c_str()), 0);
+        texture_list.push_back(v);
+
+    }
+
+    f->setUp(points_list,normal_list,texture_list);
 
 
     inputFileStream.close();
     return 1;
 }
 
-void parseModels(XMLElement* element, Group* group) {
+void parseMaterials(XMLElement* element, Figure* f){
+    float amb[4] = {0.2, 0.2, 0.2, 1};
+    float diff[4] = {0.8, 0.8, 0.8, 1};
+    float spec[4] = {0, 0, 0, 1};
+    float emissive[4] = {0, 0, 0, 1};
+    float shine = 0;
 
+    element->QueryFloatAttribute("diffR",&diff[0]);
+    element->QueryFloatAttribute("diffG",&diff[1]);
+    element->QueryFloatAttribute("diffB",&diff[2]);
+
+    element->QueryFloatAttribute("specR", &spec[0]);
+    element->QueryFloatAttribute("specG", &spec[1]);
+    element->QueryFloatAttribute("specB", &spec[2]);
+
+    element->QueryFloatAttribute("emiR", &emissive[0]);
+    element->QueryFloatAttribute("emiG", &emissive[1]);
+    element->QueryFloatAttribute("emiB", &emissive[2]);
+
+    element->QueryFloatAttribute("ambR", &amb[0]);
+    element->QueryFloatAttribute("ambG", &amb[1]);
+    element->QueryFloatAttribute("ambB", &amb[2]);
+
+    element->QueryFloatAttribute("shine", &shine);
+
+    f->addMaterials(diff,spec,emissive,amb,shine);
+
+}
+
+void parseModels(XMLElement* element, Group* group) {
+    string ficheiro, text_path;
     for (element = element->FirstChildElement(); element; element = element->NextSiblingElement()) {
-        string ficheiro = element->Attribute("file");
+        ficheiro = element->Attribute("file");
         if (!regex_match(ficheiro, regex("([a-zA-Z0-9\-_])+\.3d"))) {
             cout << "XML inválido\nFicheiro tem de ser do formato: 'Nomedoficheiro.3d'\nnão carregado" << endl;
             return;
         }
         Figure* f = new Figure();
-        if (!readfile(figures3dPath + ficheiro, f)) return;
+
+        // parsing
+        if (!readfile(fillesPath + ficheiro, f)) return;
+
+
+        // load texture
+        if(element->Attribute("texture")){
+            text_path = element->Attribute("texture");
+            f->loadTexture(texturesPath + text_path);
+        }
+
+        parseMaterials(element,f);
+
+
         group->pushFigure(f);
         cout << "Ficheiro: " << ficheiro << " lido com sucesso " << endl;
     }
@@ -145,22 +204,17 @@ Type parseType(const char* type) {
     Type r = POINT;
     if (!strcmp(type, "POINT")) {
         r = POINT;
-        printf("[DEBUG] 0\n");
     }
     else if (!strcmp(type, "DIRECTIONAL")) {
         r = DIRECTIONAL;
-        printf("[DEBUG] 1\n");
     }
     else if (!strcmp(type, "SPOT")) {
         r = SPOT;
-        printf("[DEBUG] 2\n");
     }
-    printf("[DEBUG] END\n");
     return r;
 }
 
 void parseLights(XMLElement* element, Group* group) {
-    printf("[DEBUG] entrou parseLights\n");
 
     Type type = POINT;
     float x=0,y=0,z=0;
@@ -172,7 +226,6 @@ void parseLights(XMLElement* element, Group* group) {
             element->QueryFloatAttribute("posX",&x);
             element->QueryFloatAttribute("posY",&y);
             element->QueryFloatAttribute("posZ",&z);
-            printf("type: %u | x = %f | y = %f | z = %f\n",type,x,y,z);
             group->pushLight(new Light(type,new Point(x,y,z)));
         }
     }
