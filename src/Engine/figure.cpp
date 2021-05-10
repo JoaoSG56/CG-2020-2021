@@ -111,12 +111,15 @@ void Figure::draw() {
         glNormalPointer(GL_FLOAT, 0, 0);
     }
     if (buffer_size[2]) {
+
         glBindBuffer(GL_ARRAY_BUFFER, buffer3);
         glTexCoordPointer(2, GL_FLOAT, 0, 0);
         glBindTexture(GL_TEXTURE_2D, texture);
     }
+    glEnable(GL_TEXTURE_2D);
     glEnable(GL_LIGHTING);
     glDrawArrays(GL_TRIANGLES, 0, buffer_size[0]);
+    glDisable(GL_TEXTURE_2D);
     glDisable(GL_LIGHTING);
 
 

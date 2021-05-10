@@ -337,7 +337,7 @@ void initGL(){
 
     // Textures
     ilInit();
-    glEnable(GL_TEXTURE_2D);
+    //glEnable(GL_TEXTURE_2D);
 
     // Lights
     glEnable(GL_LIGHT0);
