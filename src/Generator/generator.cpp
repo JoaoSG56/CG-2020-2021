@@ -24,8 +24,6 @@ void writeToFile(vector<Point*> vertexes, vector<Point*> normal, vector<Point*> 
 
 
 void torus(float distance, float radius, int slices, int stacks, string nome) {
-    //ofstream file(PATH + nome);
-
 
     float theta = 0;
     float phi = 0;
@@ -33,10 +31,9 @@ void torus(float distance, float radius, int slices, int stacks, string nome) {
     float phi_shift = (2 * M_PI) / stacks;
     vector<Point*> vertexes, normal, texture;
 
-    float textureSide = float(1)/float(stacks);
-    float textureRing = float(1)/float(slices);
+    float textureSide = float(1) / float(stacks);
+    float textureRing = float(1) / float(slices);
 
-    //file << slices*stacks*6 << endl;
     for (int i = 0; i < slices; i++) {
         double a0 = i * theta_shift;
         double a1 = a0 + theta_shift;
@@ -55,11 +52,9 @@ void torus(float distance, float radius, int slices, int stacks, string nome) {
             vertexes.push_back(new Point(cos(theta + theta_shift) * (distance + radius * cos(phi + phi_shift)),
                                          sin(theta + theta_shift) * (distance + radius * cos(phi + phi_shift)),
                                          radius * sin(phi + phi_shift)));
-            texture.push_back(new Point(i*textureRing,j*textureSide,0));
-            texture.push_back(new Point((i+1)*textureRing,j*textureSide,0));
-            texture.push_back(new Point(i*textureRing,(j+1)*textureSide,0));
-
-
+            texture.push_back(new Point(i * textureRing, j * textureSide, 0));
+            texture.push_back(new Point((i + 1) * textureRing, j * textureSide, 0));
+            texture.push_back(new Point(i * textureRing, (j + 1) * textureSide, 0));
 
 
             vertexes.push_back(new Point(cos(theta + theta_shift) * (distance + radius * cos(phi + phi_shift)),
@@ -72,9 +67,9 @@ void torus(float distance, float radius, int slices, int stacks, string nome) {
                     new Point(cos(theta) * (distance + radius * cos(phi)), sin(theta) * (distance + radius * cos(phi)),
                               radius * sin(phi)));
 
-            texture.push_back(new Point(i*textureRing,(j+1)*textureSide,0));
-            texture.push_back(new Point((i+1)*textureRing,j*textureSide,0));
-            texture.push_back(new Point((i+1)*textureRing,(j+1)*textureSide,0));
+            texture.push_back(new Point(i * textureRing, (j + 1) * textureSide, 0));
+            texture.push_back(new Point((i + 1) * textureRing, j * textureSide, 0));
+            texture.push_back(new Point((i + 1) * textureRing, (j + 1) * textureSide, 0));
 
 
             normal.push_back(new Point(x0 * cos(j * phi_shift), y0 * cos(j * phi_shift), sin(j * phi_shift)));
@@ -94,14 +89,13 @@ void torus(float distance, float radius, int slices, int stacks, string nome) {
         }
         theta = theta_shift * (i + 1);
     }
-    writeToFile(vertexes, normal,texture, nome);
+    writeToFile(vertexes, normal, texture, nome);
 //torus 5 3 20 20 torus.3d
 
 }
 
 
 void plane(int lado, string nome) {
-    //ofstream file(PATH + nome);
     float x, y, z;
     y = 0;
     vector<Point*> vertexes, normal, texture;
@@ -143,7 +137,6 @@ void plane(int lado, string nome) {
 
 
 void box(float a, float b, float c, int optional, string nome) {
-    //ofstream file(PATH + nome);
     float x, y, z;
 
     x = a / 2;
@@ -157,10 +150,10 @@ void box(float a, float b, float c, int optional, string nome) {
     float moveZ = c / divisoes;
 
     float textureY1 = c / (c * 2 + b);
-    float textureY2 = (c + b) / ((c * 2) + b);
+    //float textureY2 = (c + b) / ((c * 2) + b);
 
     float textureX1 = c / ((c * 2) + (a * 2));
-    float textureX2 = (c + a) / ((c * 2) + (x * 2));
+    //float textureX2 = (c + a) / ((c * 2) + (x * 2));
     float textureX3 = ((c * 2) + a) / ((c * 2) + (a * 2));
 
     float textShiftY = (c / ((c * 2) + b)) / float(optional);
@@ -168,9 +161,6 @@ void box(float a, float b, float c, int optional, string nome) {
     float textShiftZ = (c / ((c * 2) + (a * 2))) / float(optional);
 
     vector<Point*> vertexes, normal, textures;
-
-    //printf("%d\n", 36 * divisoes * divisoes);
-    //file << 36 * divisoes * divisoes << endl;
 
 
     for (int i = 0; i < divisoes; i++) {
@@ -202,16 +192,6 @@ void box(float a, float b, float c, int optional, string nome) {
                     new Point((textureX1 + textShiftX) + (j * textShiftX), (1 - textShiftZ) - (i * textShiftZ), 0));
             textures.push_back(new Point((textureX1 + textShiftX) + (j * textShiftX), 1 - (i * textShiftZ), 0));
 
-
-            /*
-            file << -x + (j * moveX) << " " << y << " " << -z + (i * moveZ) << endl;
-            file << -x + moveX + (j * moveX) << " " << y << " " << -z + moveZ + i * moveZ << endl;
-            file << -x + moveX + (j * moveX) << " " << y << " " << -z + i * moveZ << endl;
-
-            file << -x + (j * moveX) << " " << y << " " << -z + moveZ + i * moveZ << endl;
-            file << -x + moveX + (j * moveX) << " " << y << " " << -z + moveZ + i * moveZ << endl;
-            file << -x + (j * moveX) << " " << y << " " << -z + (i * moveZ) << endl;
-*/
             // baixo
             vertexes.push_back(new Point(-x + moveX + (j * moveX), -y, -z + moveZ + i * moveZ));
             vertexes.push_back(new Point(-x + (j * moveX), -y, -z + (i * moveZ)));
@@ -237,16 +217,6 @@ void box(float a, float b, float c, int optional, string nome) {
             textures.push_back(new Point((textureX1 + textShiftX) + (j * textShiftX), (i * textShiftZ), 0));
             textures.push_back(
                     new Point((textureX1 + textShiftX) + (j * textShiftX), textShiftZ + (i * textShiftZ), 0));
-
-            /*
-            file << -x + moveX + (j * moveX) << " " << -y << " " << -z + moveZ + i * moveZ << endl;
-            file << -x + (j * moveX) << " " << -y << " " << -z + (i * moveZ) << endl;
-            file << -x + moveX + (j * moveX) << " " << -y << " " << -z + i * moveZ << endl;
-
-            file << -x + moveX + (j * moveX) << " " << -y << " " << -z + moveZ + i * moveZ << endl;
-            file << -x + (j * moveX) << " " << -y << " " << -z + moveZ + i * moveZ << endl;
-            file << -x + (j * moveX) << " " << -y << " " << -z + (i * moveZ) << endl;
-            */
 
 
             // frente
@@ -276,15 +246,6 @@ void box(float a, float b, float c, int optional, string nome) {
                     new Point((textureX1 + textShiftX) + (j * textShiftX), (textureY1 + textShiftY) + (i * textShiftY),
                               0));
 
-            /*
-            file << -x + moveX + (j * moveX) << " " << -y + moveY + i * moveY << " " << z << endl;
-            file << -x + (j * moveX) << " " << -y + (i * moveY) << " " << z << endl;
-            file << -x + moveX + (j * moveX) << " " << -y + i * moveY << " " << z << endl;
-
-            file << -x + moveX + (j * moveX) << " " << -y + moveY + i * moveY << " " << z << endl;
-            file << -x + (j * moveX) << " " << -y + moveY + (i * moveY) << " " << z << endl;
-            file << -x + (j * moveX) << " " << -y + (i * moveY) << " " << z << endl;
-            */
 
             // trás
             vertexes.push_back(new Point(-x + (j * moveX), -y + (i * moveY), -z));
@@ -312,15 +273,6 @@ void box(float a, float b, float c, int optional, string nome) {
                     new Point((1 - textShiftX) - (j * textShiftX), (textureY1 + textShiftY) + (i * textShiftY), 0));
             textures.push_back(new Point((1 - textShiftX) - (j * textShiftX), textureY1 + (i * textShiftY), 0));
 
-            /*
-            file << -x + (j * moveX) << " " << -y + (i * moveY) << " " << -z << endl;
-            file << -x + moveX + (j * moveX) << " " << -y + moveY + i * moveY << " " << -z << endl;
-            file << -x + moveX + (j * moveX) << " " << -y + i * moveY << " " << -z << endl;
-
-            file << -x + (j * moveX) << " " << -y + moveY + (i * moveY) << " " << -z << endl;
-            file << -x + moveX + (j * moveX) << " " << -y + moveY + i * moveY << " " << -z << endl;
-            file << -x + (j * moveX) << " " << -y + (i * moveY) << " " << -z << endl;
-            */
 
             // lado direito
             vertexes.push_back(new Point(x, -y + (i * moveY), -z + (j * moveZ)));
@@ -349,15 +301,6 @@ void box(float a, float b, float c, int optional, string nome) {
                               0));
             textures.push_back(new Point((textureX3 - textShiftZ) - (j * textShiftX), textureY1 + (i * textShiftY), 0));
 
-            /*
-            file << x << " " << -y + (i * moveY) << " " << -z + (j * moveZ) << endl;
-            file << x << " " << -y + moveY + i * moveY << " " << -z + moveZ + (j * moveZ) << endl;
-            file << x << " " << -y + i * moveY << " " << -z + moveZ + (j * moveZ) << endl;
-
-            file << x << " " << -y + moveY + (i * moveY) << " " << -z + (j * moveZ) << endl;
-            file << x << " " << -y + moveY + i * moveY << " " << -z + moveZ + (j * moveZ) << endl;
-            file << x << " " << -y + (i * moveY) << " " << -z + (j * moveZ) << endl;
-            */
 
             // lado esquerdo
             vertexes.push_back(new Point(-x, -y + moveY + i * moveY, -z + moveZ + (j * moveZ)));
@@ -387,15 +330,6 @@ void box(float a, float b, float c, int optional, string nome) {
                     new Point(textShiftZ + (j * textShiftZ), (textureY1 + textShiftY) + (i * textShiftY), 0));
 
 
-            /*
-            file << -x << " " << -y + moveY + i * moveY << " " << -z + moveZ + (j * moveZ) << endl;
-            file << -x << " " << -y + (i * moveY) << " " << -z + (j * moveZ) << endl;
-            file << -x << " " << -y + i * moveY << " " << -z + moveZ + (j * moveZ) << endl;
-
-            file << -x << " " << -y + moveY + i * moveY << " " << -z + moveZ + (j * moveZ) << endl;
-            file << -x << " " << -y + moveY + (i * moveY) << " " << -z + (j * moveZ) << endl;
-            file << -x << " " << -y + (i * moveY) << " " << -z + (j * moveZ) << endl;
-            */
         }
     }
     writeToFile(vertexes, normal, textures, nome);
@@ -404,9 +338,8 @@ void box(float a, float b, float c, int optional, string nome) {
 }
 
 void sphere(float radius, int slices, int stacks, string nome) {
-    //ofstream file(PATH + nome);
-    float moveL = (2 * M_PI) / slices;
-    float moveH = M_PI / stacks;
+    float moveL = (2 * M_PI) / stacks;
+    float moveH = M_PI / slices;
     float x1, x2, x3;
     float y1, y2, y3;
     float z1, z2, z3;
@@ -415,8 +348,8 @@ void sphere(float radius, int slices, int stacks, string nome) {
     float textureU = 1 / (float) slices;
     float textureV = 1 / (float) stacks;
 
-    for (int i = 0; i < stacks / 2; i++) {
-        for (int j = 0; j < slices; j++) {
+    for (int i = 0; i < slices / 2; i++) {
+        for (int j = 0; j < stacks; j++) {
 
             x1 = radius * cos(moveH * i) * sin(moveL * j);
             y1 = radius * sin(moveH * i);
@@ -438,7 +371,8 @@ void sphere(float radius, int slices, int stacks, string nome) {
             normal.push_back(Point::getNormal(new Point(x2, y2, z2)));
             normal.push_back(Point::getNormal(new Point(x3, y3, z3)));
 
-            if (i != (stacks / 2) - 1) {
+
+            if (i != (slices / 2) - 1) {
                 vertexes.push_back(new Point(x3, y3, z3));
                 vertexes.push_back(new Point(x2, y2, z2));
                 vertexes.push_back(new Point(radius * cos(moveH + moveH * i) * sin(moveL + moveL * j),
@@ -461,7 +395,7 @@ void sphere(float radius, int slices, int stacks, string nome) {
             normal.push_back(Point::getNormal(new Point(x1, -y1, z1)));
             normal.push_back(Point::getNormal(new Point(x3, -y3, z3)));
 
-            if (i != (stacks / 2) - 1) {
+            if (i != (slices / 2) - 1) {
                 vertexes.push_back(new Point(x2, -y2, z2));
                 vertexes.push_back(new Point(x3, -y3, z3));
                 vertexes.push_back(new Point(radius * cos(moveH + moveH * i) * sin(moveL + moveL * j),
@@ -479,22 +413,25 @@ void sphere(float radius, int slices, int stacks, string nome) {
         }
 
     }
+//
 
-    for(int i = 0; i < vertexes.size(); i+=3){
-        float x,y;
 
-        x = (-atan2(-vertexes[i]->getX(),vertexes[i]->getZ())+ M_PI) /  (2*M_PI);
-        y = 1-(((-(vertexes[i]->getY()/radius))+1)/2.0);
+    for (int i = 0; i < vertexes.size(); i += 3) {
+        float x, y;
 
-        x2 = (-atan2(-vertexes[i+1]->getX(),vertexes[i+1]->getZ())+ M_PI) /  (2*M_PI);
-        y2 = 1-(((-(vertexes[i+1]->getY()/radius))+1)/2.0);
+        x = (-atan2(vertexes[i]->getZ(), vertexes[i]->getX()) + M_PI) / (2 * M_PI);
+        y = 1 - (((-vertexes[i]->getY() / radius) + 1) / 2.0);
 
-        x3 = (-atan2(-vertexes[i+2]->getX(),vertexes[i+2]->getZ())+ M_PI) /  (2*M_PI);
-        y3 = 1-(((-(vertexes[i+2]->getY()/radius))+1)/2.0);
+        x2 = (-atan2(vertexes[i + 1]->getZ(), vertexes[i + 1]->getX()) + M_PI) / (2 * M_PI);
+        y2 = 1 - (((-vertexes[i + 1]->getY() / radius) + 1) / 2.0);
 
-        if(x > x2 && fabs(x - x2) > 0.8)
+        x3 = (-atan2(vertexes[i + 2]->getZ(), vertexes[i + 2]->getX()) + M_PI) / (2 * M_PI);
+        y3 = 1 - (((-vertexes[i + 2]->getY() / radius) + 1) / 2.0);
+
+
+        if (x > x2 && fabs(x - x2) > 0.8)
             x2 = 1.0;
-        if(x > x3 && fabs(x - x3) > 0.8)
+        if (x > x3 && fabs(x - x3) > 0.8)
             x3 = 1.0;
         if (x2 > x && fabs(x2 - x) > 0.8)
             x = 1.0;
@@ -505,13 +442,14 @@ void sphere(float radius, int slices, int stacks, string nome) {
         if (x3 > x2 && fabs(x3 - x2) > 0.8)
             x2 = 1.0;
 
-        texture.push_back(new Point(x,y,0));
-        texture.push_back(new Point(x2,y2,0));
-        texture.push_back(new Point(x3,y3,0));
+        texture.push_back(new Point(x, y, 0));
+        texture.push_back(new Point(x2, y2, 0));
+        texture.push_back(new Point(x3, y3, 0));
     }
 
 
-    writeToFile(vertexes, normal,texture, nome);
+
+    writeToFile(vertexes, normal, texture, nome);
 }
 
 void cone(float radius, float height, int slices, int stacks, string nome) {
@@ -524,22 +462,18 @@ void cone(float radius, float height, int slices, int stacks, string nome) {
 
     vector<Point*> vertexes, normal, textures;
 
-    //file << 2 * slices * 3 + slices * 6 * (stacks - 1) << endl;
     for (int i = 0; i < stacks; i++) {
         for (int j = 0; j < slices; j++) {
             alfa = j * dimSide;
             if (i == 0) {
-                //file << 0 << " " << 0 << " " << 0 << endl;
                 // base
                 vertexes.push_back(new Point(0, 0, 0));
                 x = radius * sin(alfa + dimSide);
                 z = radius * cos(alfa + dimSide);
-                //file << x << " " << 0 << " " << z << endl;
                 vertexes.push_back(new Point(x, 0, z));
 
                 x = radius * sin(alfa);
                 z = radius * cos(alfa);
-                //file << x << " " << 0 << " " << z << endl;
                 vertexes.push_back(new Point(x, 0, z));
 
                 normal.push_back(new Point(0, -1, 0));
@@ -569,25 +503,21 @@ void cone(float radius, float height, int slices, int stacks, string nome) {
                 normal.push_back(new Point(sin(alfa), l, cos(alfa)));
                 x = (radius - (i * t)) * sin(alfa + dimSide);
                 z = (radius - (i * t)) * cos(alfa + dimSide);
-                //file << x << " " << i * l << " " << z << endl;
                 vertexes.push_back(new Point(x, i * l, z));
                 normal.push_back(new Point(sin(alfa + dimSide), l, cos(alfa + dimSide)));
                 x = (radius - ((i + 1) * t)) * sin(alfa + dimSide);
                 z = (radius - ((i + 1) * t)) * cos(alfa + dimSide);
-                //file << x << " " << (i + 1) * l << " " << z << endl;
                 vertexes.push_back(new Point(x, (i + 1) * l, z));
                 normal.push_back(new Point(sin(alfa + dimSide), l, cos(alfa + dimSide)));
 
             } else {
                 x = (radius - (i * t)) * sin(alfa);
                 z = (radius - (i * t)) * cos(alfa);
-                //file << x << " " << i * l << " " << z << endl;
                 vertexes.push_back(new Point(x, i * l, z));
                 normal.push_back(new Point(sin(alfa), l, cos(alfa)));
                 x = (radius - (i * t)) * sin(alfa + dimSide);
                 z = (radius - (i * t)) * cos(alfa + dimSide);
-                //file << x << " " << i * l << " " << z << endl;
-                //file << 0 << " " << (i + 1) * l << " " << 0 << endl;
+
 
                 vertexes.push_back(new Point(x, i * l, z));
                 normal.push_back(new Point(sin(alfa + dimSide), l, cos(alfa + dimSide)));
@@ -601,41 +531,6 @@ void cone(float radius, float height, int slices, int stacks, string nome) {
     writeToFile(vertexes, normal, textures, nome);
 }
 
-void insertXML(string file, string name) {
-    XMLDocument xmldoc;
-    if (xmldoc.LoadFile((PATH + file).c_str())) {
-        // criar
-        XMLElement* psceneElement = xmldoc.NewElement("scene");
-        XMLElement* pmodelElement = xmldoc.NewElement("model");
-        pmodelElement->SetAttribute("file", name.c_str());
-        psceneElement->LinkEndChild(pmodelElement);
-        xmldoc.LinkEndChild(psceneElement);
-
-        xmldoc.SaveFile((PATH + file).c_str());
-    } else {
-        XMLElement* psceneElement = xmldoc.FirstChildElement();
-
-        // verificar se já existe ficheiro
-
-        for (XMLElement* paux = psceneElement->FirstChildElement(); paux; paux = paux->NextSiblingElement()) {
-            //printf("%s\n", paux->Attribute("file"));
-            if (paux->Attribute("file") == name)
-                //printf("já existe\n");
-                return;
-        }
-
-        XMLElement* pmodelElement2 = xmldoc.NewElement("model");
-        pmodelElement2->SetAttribute("file", name.c_str());
-
-        psceneElement->LinkEndChild(pmodelElement2);
-
-        xmldoc.LinkEndChild(psceneElement);
-
-        xmldoc.SaveFile((PATH + file).c_str());
-    }
-
-
-}
 
 void menu() {
     cout << "#--------------------------** Menu **----------------------------# " << endl;

@@ -241,7 +241,9 @@ void menuChoice(int num) {
         case 1:
             show_axis = !show_axis;
             break;
-
+        case 2:
+            show_orbits = !show_orbits;
+            break;
         case -1:
             glutDestroyWindow(window);
             exit(0);
@@ -292,6 +294,7 @@ void createMenu() {
 
     glutAddSubMenu("Camera", camMenu);
     glutAddSubMenu("Mode", modeMenu);
+    glutAddMenuEntry("Toggle Orbits",2);
     glutAddMenuEntry("Togle Axis", 1);
     glutAddMenuEntry("Quit", -1);
 

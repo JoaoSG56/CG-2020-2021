@@ -48,8 +48,8 @@ else (WIN32) #Linux and Mac
 
 	find_package(DevIL REQUIRED)
 	link_libraries(${IL_LIBRARIES} )
-	include_directories(${IL_DIR})
-	#include_directories(/usr/local/Cellar/devil/1.8.0_2/include/IL/)
+	#include_directories(${IL_DIR})
+	include_directories(/usr/local/Cellar/devil/1.8.0_2/include/IL/)
 
 	target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${GLEW_LIBRARY} ${IL_LIBRARIES})
 	if(NOT GLUT_FOUND)
