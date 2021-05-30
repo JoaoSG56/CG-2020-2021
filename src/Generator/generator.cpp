@@ -345,7 +345,7 @@ void sphere(float radius, int slices, int stacks, string nome) {
     float z1, z2, z3;
     vector<Point*> vertexes, normal, texture;
 
-    float textureU = 1 / (float) slices;
+    float textureU = 1 / (float) (slices/2);
     float textureV = 1 / (float) stacks;
 
     for (int i = 0; i < slices / 2; i++) {
@@ -371,6 +371,10 @@ void sphere(float radius, int slices, int stacks, string nome) {
             normal.push_back(Point::getNormal(new Point(x2, y2, z2)));
             normal.push_back(Point::getNormal(new Point(x3, y3, z3)));
 
+            texture.push_back(new Point(textureV*j,(1+textureU*i)/2,0));
+            texture.push_back(new Point(textureV*j+textureV,(1+textureU*i)/2,0));
+            texture.push_back(new Point(textureV*j,(1+textureU*i+textureU)/2,0));
+
 
             if (i != (slices / 2) - 1) {
                 vertexes.push_back(new Point(x3, y3, z3));
@@ -385,6 +389,9 @@ void sphere(float radius, int slices, int stacks, string nome) {
                                                             radius * sin(moveH + moveH * i),
                                                             radius * cos(moveH + moveH * i) * cos(moveL + moveL * j))));
 
+                texture.push_back(new Point(textureV*j,(1+textureU*i+textureU)/2,0));
+                texture.push_back(new Point(textureV*j+textureV,(1+textureU*i)/2,0));
+                texture.push_back(new Point(textureV*j+textureV,(1+textureU*i+textureU)/2,0));
 
             }
             vertexes.push_back(new Point(x2, -y2, z2));
@@ -394,6 +401,10 @@ void sphere(float radius, int slices, int stacks, string nome) {
             normal.push_back(Point::getNormal(new Point(x2, -y2, z2)));
             normal.push_back(Point::getNormal(new Point(x1, -y1, z1)));
             normal.push_back(Point::getNormal(new Point(x3, -y3, z3)));
+
+            texture.push_back(new Point(textureV*j+textureV,(1+(-textureU*i))/2,0));
+            texture.push_back(new Point(textureV*j,(1+(-textureU*i))/2,0));
+            texture.push_back(new Point(textureV*j,(1+(-textureU*i-textureU))/2,0));
 
             if (i != (slices / 2) - 1) {
                 vertexes.push_back(new Point(x2, -y2, z2));
@@ -408,6 +419,9 @@ void sphere(float radius, int slices, int stacks, string nome) {
                                                             -(radius * sin(moveH + moveH * i)),
                                                             radius * cos(moveH + moveH * i) * cos(moveL + moveL * j))));
 
+                texture.push_back(new Point(textureV*j+textureV,(1+(-textureU*i))/2,0));
+                texture.push_back(new Point(textureV*j,(1+(-textureU*i-textureU))/2,0));
+                texture.push_back(new Point(textureV*j+textureV,(1+(-textureU*i-textureU))/2,0));
 
             }
         }
@@ -415,18 +429,19 @@ void sphere(float radius, int slices, int stacks, string nome) {
     }
 //
 
+/*
 
     for (int i = 0; i < vertexes.size(); i += 3) {
         float x, y;
 
         x = (-atan2(vertexes[i]->getZ(), vertexes[i]->getX()) + M_PI) / (2 * M_PI);
-        y = 1 - (((-vertexes[i]->getY() / radius) + 1) / 2.0);
+        y = (1 - vertexes[i]->getY() / radius) / 2.0;
 
         x2 = (-atan2(vertexes[i + 1]->getZ(), vertexes[i + 1]->getX()) + M_PI) / (2 * M_PI);
-        y2 = 1 - (((-vertexes[i + 1]->getY() / radius) + 1) / 2.0);
+        y2 = (1 - vertexes[i + 1]->getY() / radius) / 2.0;
 
         x3 = (-atan2(vertexes[i + 2]->getZ(), vertexes[i + 2]->getX()) + M_PI) / (2 * M_PI);
-        y3 = 1 - (((-vertexes[i + 2]->getY() / radius) + 1) / 2.0);
+        y3 = (1 - vertexes[i + 2]->getY() / radius) / 2.0;
 
 
         if (x > x2 && fabs(x - x2) > 0.8)
@@ -446,6 +461,8 @@ void sphere(float radius, int slices, int stacks, string nome) {
         texture.push_back(new Point(x2, y2, 0));
         texture.push_back(new Point(x3, y3, 0));
     }
+
+    */
 
 
 
